@@ -57,7 +57,7 @@ angular.module('treasuremapApp')
           $scope.locations.splice(i, 1);
         }
       });
-	  $window.location.reload();
+	  $location.path('/');
     };
 
     $scope.openImage = function (index) {

@@ -8805,6 +8805,15 @@ input.data {
     float: right !important;
 }
 
+.map.main ul.users li.users:hover {
+	background: transparent !important;
+}
+
+a:hover {
+	color:#29E5D8 !important;
+	text-decoration: none !important;
+}
+
 /* Login Styles */
 	.login-container p {
 		font-size: 14px;
