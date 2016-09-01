@@ -1,16 +1,34 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
+<div ng-include="'components/chat/chat.html'"></div>
 
 <div class="container">
   <div class="row">
     <div class="col-sm-12">
-      <h1>Friends Activity</h1>
+      <h1 style="text-align:center;">Friends Activity</h1>
     </div>
     <div class="col-sm-12">
-      <ul>
-        <li ng-repeat="l in locations | orderBy:'createdAt'"><a ng-href="/users/{{l.owner._id}}">
-          {{l.createdAt | date : format : timezone}} - {{l.owner.name}}</a> created <a ng-href="/locations/{{l._id}}">{{l.details.name}}</a>
-        </li>
-      </ul>
-    </div>
+		<div class="friendsActivity-container">
+			<ul class="feeds">
+				<li ng-repeat="l in locations | orderBy:'createdAt'" class="feed" ng-if="isFriend(l.owner._id) && l.details.publication == true || isFriend(l.owner._id) && l.details.members.indexOf(currentUser._id) !== -1">
+					<table><tr>
+					  <td class="feed-td one">
+						  <img src="http://localhost:9000/assets/images/users/{{l.owner.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" style="width:100px;height:100px;margin:5px;"/>
+					  </td>
+					  <td class="feed-td two">
+						  <p><span>Created @:</span></p>
+						  <p><span>From:</span></p>
+						  <p><span>Location:</span></p>
+					  </td>
+					  <td class="feed-td three">
+						  <p>{{l.createdAt | date : format : timezone}}</p>
+						  <p><a ng-href="/users/{{l.owner._id}}">{{l.owner.name}}</a></p>					  
+						  <p class="location-name-normal"><a ng-href="/locations/{{l._id}}" >{{l.details.name | limitTo: 15}}<span ng-if="l.details.name.length > 15">...</span></a></p>
+					  </td>
+					</tr></table>
+				</li>
+			</ul>
+		</div>
+	</div>
   </div>
 </div>
+

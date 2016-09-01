@@ -6,6 +6,8 @@ angular.module('treasuremapApp')
 
     $scope.search = search;
     $scope.locations = Location.query();
+	$scope.isFriend = Auth.isFriend;
+	$scope.currentUser = Auth.getCurrentUser();
 
     $scope.openModal = function (size) {
 

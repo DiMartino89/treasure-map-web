@@ -5,9 +5,12 @@ angular.module('treasuremapApp', [
   'ngResource',
   'ngSanitize',
   'ui.router',
+  'ui.calendar',
   'ui.bootstrap',
   'uiGmapgoogle-maps',
   'ngFileUpload',
+  'angularFileUpload',
+  'ae-datetimepicker',
   'ngStorage',
   'bootstrapLightbox',
   'ngTouch'
@@ -65,7 +68,7 @@ angular.module('treasuremapApp', [
     // Redirect to login if route requires auth and you're not logged in
     $rootScope.$on('$stateChangeStart', function (event, next, nextParams, last) {
       Auth.isLoggedInAsync(function(loggedIn) {
-        if (next.authenticate && !loggedIn) {
+        if (!loggedIn) { //next.authenticate && 
           $location.path('/login');
         }
       });

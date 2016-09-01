@@ -1,40 +1,116 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
+<div ng-include="'components/chat/chat.html'"></div>
 
 <div class="container settings-container">
   <div class="row">
+	<div class="col-sm-12">
+      <h1>Settings</h1>
+    </div>
     <div class="col-sm-12">
-      <h1>Change Password</h1>
+      <h2>Change Password</h2>
     </div>
     <div class="col-sm-12">
       <form class="form settings-form" name="form" ng-submit="changePassword(form)" novalidate>
+		<div class="update-container">
+			<div class="form-group">
+			  <label>Current Password</label>
 
-        <div class="form-group">
-          <label>Current Password</label>
+			  <input type="password" name="password" class="form-control" ng-model="user.oldPassword"
+					 mongoose-error/>
+			  <p class="help-block" ng-show="form.password.$error.mongoose">
+				  {{ errors.other }}
+			  </p>
+			</div>
 
-          <input type="password" name="password" class="form-control" ng-model="user.oldPassword"
-                 mongoose-error/>
-          <p class="help-block" ng-show="form.password.$error.mongoose">
-              {{ errors.other }}
-          </p>
-        </div>
+			<div class="form-group">
+			  <label>New Password</label>
 
-        <div class="form-group">
-          <label>New Password</label>
+			  <input type="password" name="newPassword" class="form-control" ng-model="user.newPassword"
+					 ng-minlength="3"
+					 required/>
+			  <p class="help-block"
+				 ng-show="(form.newPassword.$error.minlength || form.newPassword.$error.required) && (form.newPassword.$dirty || submitted)">
+				Password must be at least 3 characters.
+			  </p>
+			</div>
 
-          <input type="password" name="newPassword" class="form-control" ng-model="user.newPassword"
-                 ng-minlength="3"
-                 required/>
-          <p class="help-block"
-             ng-show="(form.newPassword.$error.minlength || form.newPassword.$error.required) && (form.newPassword.$dirty || submitted)">
-            Password must be at least 3 characters.
-          </p>
-        </div>
-
-        <p class="help-block"> {{ message }} </p>
-        <div class="buttons">
-          <button class="btn btn-lg btn-primary btn-save" type="submit">Save</button>
-        </div>
+			<p class="help-block"> {{ message }} </p>
+			<div class="buttons">
+			  <button class="btn btn-lg btn-primary btn-save" type="submit">Save</button>
+			</div>
+		</div>
       </form>
+	</div>
+	
+	<div class="col-sm-12">
+      <h2>Change Your Status</h2>
     </div>
+	<div class="col-sm-12">
+		<div class="status-form">
+			<div class="update-container">
+				<div class="form-group">
+					<label style="display:inline-block;text-align:left;">Current Status: <span style="font-weight:normal;">{{currentUser.status}}</span></label>
+					<input class="form-control status" type="text" placeholder="Type in your new status" name="newStatus" ng-model="user.newStatus"/>
+				</div>
+				<div class="buttons">
+					<button class="btn btn-lg btn-primary btn-save" ng-click="saveStatus()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-sm-12">
+      <h2>Change Your Description</h2>
+    </div>
+	<div class="col-sm-12">
+		<div class="description-form">
+			<div class="update-container">
+				<div class="form-group">
+					<label style="display:inline-block;text-align:left;">Current Description: <span style="font-weight:normal;">{{currentUser.description}}</span></label>
+					<textarea class="form-control description" type="text" placeholder="Something about you" name="newDescription" ng-model="user.newDescription" max-length="500" rows="7"/>
+				</div>
+				<div class="buttons">
+					<button class="btn btn-lg btn-primary btn-save" ng-click="saveDescription()">Save</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-sm-12">
+      <h2>Change Profile Picture</h2>
+    </div>
+	 <div class="col-sm-12">
+		<div class="status-form">
+			<div ng-controller="UploadCtrl">
+			  <div class="container container-profile-picture-upload" style="padding:0px;">
+				<div class="update-container">
+					<div class="container">
+						<div class="row">
+							<div class="picture-form">
+								<div class="col-md-6" style="padding-left:0px;">
+									<div file-upload="fileUploadOptions" class="drop-container"></div>
+								</div>
+								<div class="col-md-6">
+									<div>
+										<h3 style="margin-top:0px; color:#fff;">Upload Log</h3>
+										<div>
+											<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+												{{alert.msg}}
+											</alert>
+										</div>
+										<div>
+											<label>Current Profile Picture:</label>
+											<img src="http://localhost:9000/assets/images/users/{{currentUser.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" style="width:100px;height:100px;"/>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			  </div>
+			  <p class="help-block"> {{  confirmMessage }} </p>
+		</div>
+	</div>
   </div>
 </div>

@@ -1,8 +1,6 @@
 <div class="row modal-header ng-scope" >
   <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span></button>
   <h1 class="modal-title">Edit Location</h1>
-
-  <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 </div>
 
 <div class="row modal-body ng-scope">
@@ -53,7 +51,8 @@
                name="category"
                class="btn btn-default"
                ng-model="editLocation.details.category._id"
-               ng-click="setCategory(c)"
+               onclick="angular.element(this).scope().setCategory(c)"
+			   ng-click="setCategory(c)"
                btn-radio="'{{c._id}}'"
                required>{{c.name}}</label>
       </div>
@@ -62,6 +61,26 @@
       Category required
       </p>
     </div>
+	
+	<div class="form-group" ng-class="{ 'has-success': form.dateTime.$valid && submitted,
+                                            'has-error': form.dateTime.$invalid && submitted }">
+											
+	  <label>Date & Time</label>
+	  
+	  <div class="form-group">
+                    <div class="input-group" datetimepicker
+                         ng-model="editLocation.details.dateTime" options="{format: 'DD/MM/YYYY HH:mm'}" datetime="dd/MM/yyyy HH:mm">
+                        <input type="text" class="form-control" ng-value="{{date}}"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar" style="cursor:pointer;"></span>
+                        </span>
+                    </div>
+                </div>
+	  
+	  <p class="help-block" ng-show="form.dateTime.$error.required && submitted">
+        Date required
+      </p>
+	  </div>
 
     <div class="form-group" ng-class="{ 'has-success': form.duration.$valid && submitted,
                                             'has-error': form.duration.$invalid && submitted }">
@@ -69,13 +88,12 @@
 
       <input type="number"
              name="duration"
-             min="0.5"
+             min="1"
              max="10"
-             step="0.5"
+             step="1"
              placeholder="duration in hours"
              class="form-control"
-             ng-model="editLocation.details.duration"
-             required/>
+             ng-model="editLocation.details.duration"/>
 
       <p class="help-block" ng-show="form.duration.$error.required && submitted">
         Duration required
@@ -99,8 +117,22 @@
       <p class="help-block" ng-show="form.description.$error.required && submitted">
         Description required
       </p>
-
       </div>
+	
+	<div class="form-group">
+      <label>Publish Location for all Friends</label>	  
+      <input type="checkbox" name="publication" id="publication" ng-click="takeOutMembers()" ng-model="editLocation.details.publication"/>
+    </div>
+	
+	<div class="form-group private">
+      <label>Invite specific Friends</label>	 
+	  <ul>
+		<li ng-repeat="user in currentUser.friends | orderBy:'name'" style="list-style:none;display:inline;">
+		<input type="checkbox" checked ng-click="invite(user)" ng-if="editLocation.details.members.indexOf(user._id) !== -1" ng-init="editLocation.details.publication = false;" onclick="switchPublicState2()" name="ivitation" class="invitation"/>
+		<input type="checkbox" ng-click="invite(user)" ng-if="editLocation.details.members.indexOf(user._id) === -1" ng-click="editLocation.details.publication = false;" onclick="switchPublicState2()" name="ivitation" class="invitation"/><img src="http://localhost:9000/assets/images/users/{{user.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" style="width:50px; height:50px; margin: 5px;" popover-placement="bottom" popover="{{ user.name }}" popover-trigger="mouseover mouseleave"/></li>
+	  </ul>
+    </div>
+	  
     </div>
 
     <div class="col-md-6">
@@ -127,47 +159,113 @@
       </div>
     </div>
 
-    <div class="row form-group col-sm-12">
-      <label class="col-sm-12">Photos</label>
-      <div class="col-sm-12">
-        <div ng-repeat="pic in editLocation.details.pictures" class="images col-sm-4">
-          <a ng-click="openImage($index)" class="loc-picture thumbnail">
-            <img src="{{pic}}" alt="">
-          </a>
-          <span class="glyphicon glyphicon-remove" ng-click="removePicture(pic)"></span>
-        </div>
-      </div>
-    </div>
-
-    <div class="row form-group uploadForm col-sm-12">
+    <!--<div class="row form-group uploadForm col-sm-12">
 
         <div class="col-sm-6">
           <div ngf-no-file-drop>
-            <div class="button" ngf-select ng-model="files" ngf-multiple="false">Select File</div>
+            <div class="button" ngf-select ng-model="files" ng-file-change="upload($files)" ngf-multiple="true">Select File</div>
           </div>
           <div ngf-drop ngf-select ng-model="files" class="drop-box"
-               ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="false"
+               ngf-drag-over-class="dragover" ng-file-change="upload($files)" ngf-multiple="true" ngf-allow-dir="false"
                accept="image/*">
             Drop images here or click to upload
           </div>
 
           <ul class="pictures col-sm-6" ng-show="files">
-            <li>
-              <img class="pic col-sm-3" ng-repeat="f in files" ngf-src="f" ngf-default-src="'assets/images/thumb.jpg'"
-                   ngf-accept="'image/*'">
-            </li>
-          </ul>
+			  <li>
+				<img class="pic" ng-repeat="f in files" ngf-src="f" ngf-default-src="'assets/images/thumb.jpg'"
+					 ngf-accept="'image/*'">
+			  </li>
+		  </ul>
         </div>
+    </div>-->
+	
+	<style>	
+		.upload-zone {
+			height: 200px;
+			position: relative;
+			display: table;
+			width: 200px;
+		}
 
-        <ul class="pictures col-sm-6" ng-show="files">
-          <li>
-            <img class="pic" ng-repeat="f in files" ngf-src="f" ngf-default-src="'assets/images/thumb.jpg'"
-                 ngf-accept="'image/*'">
-          </li>
-        </ul>
+		.upload-zone .alert-container {
+			position: absolute;
+			top: 0;
+			width: 100%;
+		}
 
+		.upload-zone .alert {
+			overflow: hidden;
+		}
 
-      </div>
+		.drop-zone, .upload-progress-zone {
+			height: 200px;
+			display: table-cell;
+			vertical-align: middle;
+			text-align: center;
+			padding: 10px;
+		}
+
+		.drop-zone {
+			border: 2px black dashed;
+		}
+
+		.drop-zone-over {
+			border-color: blue;
+		}
+
+		.drop-zone .drop-zone-message {
+			font-size: 2em;
+		}
+
+		.drop-zone input[type="file"]  {
+			display: none;
+		}
+	</style>
+	
+	<div class="row form-group col-sm-12">
+      
+    </div>
+	
+	<div class="col-sm-12">	 
+		<div ng-controller="LocationEditUploadCtrl">
+			<label class="col-sm-12">Photos</label>
+			<div class="col-sm-12">
+				<div ng-repeat="pic in editLocation.details.pictures" class="images col-sm-6">
+				  <a ng-click="openImage($index)" class="loc-picture thumbnail">
+					<img src="{{pic}}" alt="">
+				  </a>
+				  <span class="glyphicon glyphicon-remove" ng-click="removePicture(pic)"></span>
+				</div>
+				<p ng-if="editLocation.details.pictures.length == 0">There is currently no picture uploaded!</p>
+			</div>
+			<div class="container" style="padding:0px;">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-6" style="padding-left:0px;">
+							<div file-edit-location-upload="fileUploadOptions" class="drop-container" style="width: 100%; padding-right: 15px;"></div>
+						</div>
+						<div class="col-md-6">
+							<div>
+								<h3 style="margin-top:0px;">Upload Log</h3>
+								<div>
+									<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+										{{alert.msg}}
+									</alert>
+								</div>
+								<input id="picturesAmount" type="number" name="picturesAmount" value="{{alerts.length}}" style="display:none;"/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		  <p class="help-block"> {{  confirmMessage }} </p>
+		  <button class="btn btn-primary" onclick="angular.element(this).scope().changeLocationPictures($('#picturesAmount').val())">Confirm Picture</button>		  
+		</div>
+	</div>
+	<div class="col-sm-12" style="margin-top:20px;">	 
+		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+	</div>
 </div>
 
     <div class="row modal-footer ng-scope">
@@ -180,3 +278,27 @@
     </div>
 
   </form>
+<script>
+	function switchPublicState() {
+		if(document.getElementById("publication").checked == false) {
+			$('.form-group.private').show();
+		} else {
+			$('.invitation').prop('checked', false);
+			$('.form-group.private').hide();
+		}
+	}
+	function switchPublicState2() {
+		var all = document.getElementsByClassName('invitation');
+		var memberExist = false;
+		for (var i = 0; i < all.length; i++) {
+		  if (all[i].checked) {
+			memberExist = true;
+		  }
+		}
+		if(memberExist) {
+			$('#publication').prop('checked', false);
+		} else {
+			$('#publication').prop('checked', true);
+		}
+	}
+</script>

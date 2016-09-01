@@ -1,24 +1,47 @@
-<a class="selloc-name" href='/locations/{{location._id}}' ng-style="getLocationBackground(location)">
-  <h2>{{location.details.name}}</h2>
+<a class="selloc-name" href='/locations/{{location._id}}' ng-style="getLocationBackground(location)" >
+  <h2 style="background:rgba(0,0,0,0.6);padding:5px;border-radius:3px;color:#fff;" ng-href="/locations/{{location._id}}">{{location.details.name}} <span class="glyphicon glyphicon-link" style="float: right; font-size: 24px; margin-top: 4px;"></span></h2>
 </a>
 
-<p>
-  <a href='/categories/{{location.details.category._id}}'>{{location.details.category.name}}</a>
-</p>
+<table>
+	<tr>
+		<td style="width:100px;color:#fff;font-weight:bold;">
+			<span>Where?</span>
+			<br>
+			<br>
+			<span>What?</span>
+			<br>
+			<span>When?</span>
+			<br>
+			<span>How long?</span>
+		</td>
+		<td>
+			<address style="color:#fff;margin-bottom:0px;">
+			  {{location.address.street}} <br/>
+			  {{location.address.zipcode}}, {{location.address.city}} <br/>
+			</address>
+			<span>
+			  <a href='/categories/{{location.details.category._id}}'>{{location.details.category.name}}</a>
+			</span>
+			<br>
+			<span style="color:#fff;">{{location.details.dateTime | date:'dd/MM/yyyy HH:mm a'}}</span>
+			<br>
+			<span style="color:#fff;">{{location.details.duration}} hours</span>
+		</td>
+	</tr>
+<table>
+<br>
+<p style="color:#fff;font-weight:bold;" ng-show="location.details.description || location.details.imports.length >= 1">Description</p>
 
-<address>
-  {{location.address.street}} <br/>
-  {{location.address.zipcode}} {{location.address.city}} <br/>
-</address>
-
-<p ng-show="location.details.duration">Duration: {{location.details.duration}} h</p>
-
-<h3 ng-show="location.details.description || location.details.imports.length >= 1">Description</h3>
-
-<p ng-show="location.details.description">{{location.details.description | limitTo:128}} <a ng-href="/locations/{{location._id}}">...</a></p>
-<p ng-show="location.details.imports.length >= 1"><span ng-bind-html="location.details.imports | limitHtml:256"></span> <a ng-href="/locations/{{location._id}}">...</a></p>
-
-<a ng-href="/locations/{{location._id}}">Read more</a>
+<p style="color:#fff;" ng-show="location.details.description">{{location.details.description | limitTo:128}} <a ng-href="/locations/{{location._id}}">...</a></p>
+<p style="color:#fff;" ng-show="location.details.imports.length >= 1"><span ng-bind-html="location.details.imports | limitHtml:256"></span> <a ng-href="/locations/{{location._id}}">...</a></p>
+<p style="color:#fff;font-weight:bold;" ng-if="location.details.publication == true">Published for all Friends</p>
+<div ng-if="location.details.members.length > 0">
+	<p class="loc-members" style="color:#fff;font-weight:bold;"><strong>Members:</strong></p>
+		  <ul class="members-list">
+			<li class="member" ng-repeat="u in location.details.members" ng-model="member" ng-init="member = getUser(u);" style="list-style:none;display:inline;color:#000;border-bottom:none;">
+			<a ng-href="/users/{{u}}" ><img src="http://localhost:9000/assets/images/users/{{member.name}}.jpg" style="width:50px;height:50px;margin:5px;" popover-placement="bottom" popover="{{ member.name }}" popover-trigger="mouseover mouseleave"/></a></li>
+		  </ul>
+</div>
 
 <!--<div>-->
 <!--<h3>Images</h3>-->

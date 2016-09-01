@@ -1,12 +1,43 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
+<div ng-include="'components/chat/chat.html'"></div>
+
+<style>
+	h1 {text-align:center;}
+</style>
 
 <div class="container">
-  <h1>Categories</h1>
-
-  <ul class="categories">
-    <li ng-repeat="c in categories">
-      <img class="cat-image" ng-src="{{c.imgUrl}}" alt=""/>
-      <a ng-href="/categories/{{c._id}}"><h3 class="cat-name">{{c.name}}</h3></a>
-    </li>
-  </ul>
+  <div class="row">
+    <div class="col-sm-12"> 
+		<h1>Categories</h1>
+	</div>
+	<div class="col-sm-12">
+		<div class="categories-container">
+		  <ul class="categories-list">
+			<li ng-repeat="c in categories">
+				<table>
+					<tr>
+						<td class="category-td one">
+							<a ng-href="/categories/{{c._id}}"><img class="cat-image" ng-src="{{c.imgUrl}}" alt=""/></a>
+						</td>
+						<td class="category-td two" style="width:200px;">
+							<a ng-href="/categories/{{c._id}}">{{c.name}}</a>
+						</td>
+						<td class="category-td three" style="color:#fff;">
+							<span ng-if="c.name == 'Accommodation'"> (f.e. Hotels, Motels, Apartments, Camping)</span>
+							<span ng-if="c.name == 'Events'"> (f.e. Concerts, Sport-Events, Musicals)</span>
+							<span ng-if="c.name == 'Food & Drink'"> (f.e. Restaurants, Bars, Fast-Food, Coffee Shops)</span>
+							<span ng-if="c.name == 'Geocaches'"> </span>
+							<span ng-if="c.name == 'Leisure'"> (f.e. Bowling, Cinema, Parks)</span>
+							<span ng-if="c.name == 'Other'"> (f.e. Internet Café, Libraries)</span>
+							<span ng-if="c.name == 'Shopping'"> (f.e. Malls, Shops)</span>
+							<span ng-if="c.name == 'Sights & Culture'"> (f.e. Sights, Museums, Public Places)</span>
+							<span ng-if="c.name == 'Sports'"> (f.e. Fitness-Centre, Sports for a Club, Running)</span>
+						</td>
+					</tr>
+				</table>
+			</li>
+		  </ul>
+		</div>
+	</div>
+  </div>
 </div>

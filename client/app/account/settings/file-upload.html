@@ -1,0 +1,35 @@
+		<div ng-controller="UploadCtrl" class="upload-zone">
+			<div class="drop-zone" nv-file-drop uploader="uploader"
+				 nv-file-over="" over-class="drop-zone-over"
+				 ng-if="!uploading">
+				<div>
+					<!--<div ng-if="alert" class="alert-container">
+						<alert type="{{alert.type}}" close="closeAlert();">
+							<div>{{alert.msg}}</div>
+							<div nf-if="alert.details">{{alert.details}}</div>
+						</alert>
+					</div>-->
+
+					<h3>Drag a file</h3>
+					<p>Or</p>
+					<div>
+						<button class="btn btn-primary select" name="file"
+								ng-click="selectFile(); getCurrUsername(currentUser.name)">
+								Select a file
+						</button>
+						<input id="fileInput" onchange="document.getElementById('newPicture').value = this.value;" name="file" type="file" nv-file-select uploader="uploader"/>
+						
+						<!---->
+					</div>
+				</div>
+			</div>
+			
+			<div class="upload-progress-zone"
+				 ng-if="uploading">
+				<div>
+					<span ng-if="progress !== 100">Uploading...</span>
+					<span ng-if="progress === 100">Done</span>
+				</div>
+				<progressbar value="progress">{{progress}}%</progressbar>
+			</div>
+		</div>

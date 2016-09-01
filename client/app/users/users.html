@@ -1,31 +1,103 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
+<div ng-include="'components/chat/chat.html'"></div>
 
-<div class="container">
-  <h1>Users</h1>
+<div class="container users-container">
+  <div class="row">
+    <div class="col-sm-12"> 
+		<h1>Users</h1>
+	</div>
+	
+	<div class="col-sm-12"> 
+		<div class="request-container" ng-show="currentUser.requests.length > 0">
+		  <h3 class="profile-locations-header">Requests</h3>
+		   <ul class="requests-list">
+			<li ng-repeat="r in currentUser.requests">
+				<table>
+					<tr>
+						<td class="user-td one">
+							<a ng-href="/users/{{r._id}}"><img style="width:100px;height:100px;margin:5px;" src="http://localhost:9000/assets/images/users/{{r.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'"/></a>
+						</td>
+						<td class="user-td two">
+							<a ng-href="/users/{{r._id}}">{{r.name}}</a>
+						</td>
+						<td class="user-td four">	 
+							<button class="btn btn-primary normal"
+							  ng-show="!isFriend(r._id) && r._id != currentUser._id"
+							  ng-click="addFriend(r); addFriend2(r)">Accept</button>
+							<button class="btn btn-primary normal"
+							  ng-show="!isFriend(r._id) && r._id != currentUser._id"
+							  ng-click="removeRequest(r)">Refuse</button>
+							<!-- Mobile buttons -->
+							<button class="btn btn-primary mobile"
+							  ng-show="!isFriend(r._id) && r._id != currentUser._id"
+							  ng-click="addFriend(r); addFriend2(r)"><span class="glyphicon glyphicon-ok"></span></button>
+							<button class="btn btn-primary mobile"
+							  ng-show="!isFriend(r._id) && r._id != currentUser._id"
+							  ng-click="removeRequest(r)"><span class="glyphicon glyphicon-remove-sign"></span></button>
+							  
+						</td>
+					</tr>
+				</table>
+			</li>		
+		  </ul>
+		</div>
+	</div>
+		
+		<div class="col-sm-12">
+			<div class="users-container">
+			  <form class="form-inline pull-right users">
+				<div class="form-group users">
+				  <label class="sr-only" for="userFilter">Filter users</label>
+				  <div class="input-group users">
+					<div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
+					<input type="text" class="form-control" id="userFilter" placeholder="Filter users" ng-model="userFilter">
+				  </div>
+				</div>
+				<br/>
+			  </form>
 
-  <form class="form-inline pull-right">
-    <div class="form-group">
-      <label class="sr-only" for="userFilter">Filter users</label>
-      <div class="input-group">
-        <div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
-        <input type="text" class="form-control" id="userFilter" placeholder="Filter users" ng-model="userFilter">
-      </div>
-    </div>
-    <br/>
-    <div class="form-group">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" ng-model="allUsers"> Show all users
-        </label>
-      </div>
-    </div>
-  </form>
-
-  <ul class="users">
-    <li ng-repeat="u in users | orderBy:'name' | filter:userFilter" ng-hide="!allUsers && !isFriend(u._id)"><a ng-href="/users/{{u._id}}">{{u.name}}</a>
-      <span ng-show="u._id == currentUser._id">me</span>
-      <span ng-show="isFriend(u._id)">friend</span>
-    </li>
-  </ul>
-
+			  <ul class="users-list">
+				<li ng-repeat="u in users | orderBy:'name' | filter:userFilter" ng-if="u.name != 'Admin'">
+					<table>
+						<tr>
+							<td class="user-td one">
+								<a ng-href="/users/{{u._id}}"><img src="http://localhost:9000/assets/images/users/{{u.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" style="width:100px;height:100px;margin:5px;"/></a>
+							</td>
+							<td class="user-td two" style="width:200px;">
+								<a ng-href="/users/{{u._id}}">{{u.name}}</a>
+							</td>
+							<td class="user-td three" style="width:70px;">
+								<span ng-show="u._id == currentUser._id" style="color:#fff;"> Me</span>
+								<span ng-show="isFriend(u._id)" style="color:#fff;"> Friend</span>
+							</td>
+							<td class="user-td four">
+								<style>.btn.normal {display:block;}</style>
+								<button class="btn btn-primary normal"
+									  ng-show="isFriend(u._id) && u._id != currentUser._id"
+									  ng-click="removeFriend(u); removeFriend2(u)">Remove Friend</button>
+								<button class="btn btn-primary normal"
+									  ng-show="!isRequest(u) && !isFriend(u._id) && u._id != currentUser._id"
+									  ng-click="sendRequest(u)">Send Friendrequest</button>
+								<button class="btn btn-primary normal"
+									  ng-show="isRequest(u) && !isFriend(u._id) && u._id != currentUser._id"
+									  ng-click="removeRequest(u)">Cancel Friendrequest</button>
+								<!-- Mobile buttons -->	  
+								<style>.btn.mobile {display:none;}</style>
+								<button class="btn btn-primary mobile"
+									  ng-show="isFriend(u._id) && u._id != currentUser._id"
+									  ng-click="removeFriend(u); removeFriend2(u)"><span class="glyphicon glyphicon-trash"></span></button>
+								<button class="btn btn-primary mobile"
+									  ng-show="!isRequest(u) && !isFriend(u._id) && u._id != currentUser._id"
+									  ng-click="sendRequest(u)"><span class="glyphicon glyphicon-plus"></span></button>
+								<button class="btn btn-primary mobile"
+									  ng-show="isRequest(u) && !isFriend(u._id) && u._id != currentUser._id"
+									  ng-click="removeRequest(u)"><span class="glyphicon glyphicon-remove-sign"></span></button>
+							</td>
+						</tr>
+					</table>
+				</li>
+			  </ul>
+			</div>
+		</div>
+  </div>
 </div>

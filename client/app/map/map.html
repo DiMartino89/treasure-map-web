@@ -1,6 +1,11 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
-
-<div class="map">
+<div ng-include="'components/chat/chat.html'"></div>
+<style>
+@media screen and (max-width: 415px) {
+	body.map {overflow:hidden;margin-top:0px !important;height:100vh;}
+}
+</style>
+<div class="map main" ng-show="isLoggedIn()">
   <ui-gmap-google-map center='search.map.center' zoom='search.map.zoom' options='options' control='smallScreen'>
 
      <ui-gmap-search-box template="searchboxNav.template"
@@ -20,13 +25,33 @@
 
   		<ui-gmap-windows show="show">
         <div ng-non-bindable>
-          <a href='/locations/{{_id}}'>
-            <strong>{{details.name}}</strong>
-            <p>{{address.street}}
-              <br/>{{address.zipcode}} {{address.city}}</p>
-          </a>
-          <p>Duration {{details.duration}}h</p>
-          <a href='/categories/{{details.category._id}}'><i>{{details.category.name}}</i></a>
+		  <style>
+			table, tr, td { border:none; }
+			tr { margin: 5px 0px; }
+			td { width: auto; height: auto; vertical-align: top; padding-right: 10px; }
+		  </style>
+		  <table>
+		  <tr>
+			  <td><strong>Who?</strong></td><td><a ng-href="/users/{{location.owner._id}}"> {{owner.name}}</a></td>
+          </tr>
+		  <tr>
+			  <td><strong>Where?</strong></td><td>
+			  <a href='/locations/{{_id}}'>
+				<strong>{{details.name}}</strong>
+				<p>{{address.street}}
+				<br/>{{address.zipcode}} {{address.city}}</p> 
+			  </a></td>
+		  </tr>
+		  <tr>
+			  <td><strong>What?</strong></td><td><a href='/categories/{{details.category._id}}'><i>{{details.category.name}}</i></a></td>
+		  </tr>
+		  <tr>
+			  <td><strong>When?</strong></td><td> {{details.dateTime | date:'dd/MM/yyyy HH:mm a'}}</td>
+		  </tr>
+		  <tr>
+              <td><strong>Duration?</strong></td><td> {{details.duration}} hours</td>
+		  </tr>
+		  </table>
         </div>
       </ui-gmap-windows>
 
@@ -43,9 +68,9 @@
     <span class="closer glyphicon glyphicon-remove" aria-hidden="true" ng-click="closeSidebar()"></span>
   </div>
 
-  <button class="btn btn-lg btn-map-new" type="button" ng-click="openModal('lg')" ng-show="isLoggedIn()">
+  <!--<button class="btn btn-lg btn-map-new" type="button" ng-click="openModal('lg')" ng-show="isLoggedIn()">
     <span>&#43;</span>
-  </button>
+  </button>-->
 
   <form class="form-inline searchRadius">
     <div class="form-group">
@@ -53,6 +78,17 @@
 
       <div class="input-group">
         <div class="input-group-addon">Search Radius (in km)</div>
+        <input ng-model="searchRadius" type="number" name="searchRadius" class="form-control" placeholder="Search Radius" min="1" max="100" step="1" ng-change="getLocations(search.userLocation, searchRadius)">
+      </div>
+    </div>
+  </form>
+  
+  <form class="form-inline searchRadius mobile">
+    <div class="form-group">
+      <label class="sr-only" for="searchRadius">Radius</label>
+
+      <div class="input-group">
+        <div class="input-group-addon">Radius</div>
         <input ng-model="searchRadius" type="number" name="searchRadius" class="form-control" placeholder="Search Radius" min="1" max="100" step="1" ng-change="getLocations(search.userLocation, searchRadius)">
       </div>
     </div>

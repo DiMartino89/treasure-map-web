@@ -1,45 +1,114 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
+<div ng-include="'components/chat/chat.html'"></div>
 
-<div class="container location">
+<div class="container">
   <div class="row">
     <div class="col-sm-6">
-       <a class="loc-edit" type="button" ng-click="openModal('lg')" ng-show="isLoggedIn()">
-         <span class="glyphicon glyphicon-edit"></span> Edit
-       </a>
-      <h1>{{location.details.name}}</h1>
+		<div class="location-container">
+			<h2 class="location-name">{{location.details.name}}
+			<a class="loc-edit" type="button" ng-if="location.owner._id == currentUser._id" ng-click="delete(location)" ng-show="isLoggedIn()">
+				 <span class="glyphicon glyphicon-trash"></span> Delete
+		    </a>
+			<a class="loc-edit" type="button" ng-if="location.owner._id == currentUser._id" ng-click="openModal('lg')" ng-show="isLoggedIn()">
+				 <span class="glyphicon glyphicon-edit"></span> Edit
+			</a>		
+			</h2>
+			<h3 class="location-name mobile">{{location.details.name}}
+			<a class="loc-edit" type="button" ng-if="location.owner._id == currentUser._id" ng-click="delete(location)" ng-show="isLoggedIn()">
+				 <span class="glyphicon glyphicon-trash"></span> Delete
+		    </a>
+			<a class="loc-edit" type="button" ng-if="location.owner._id == currentUser._id" ng-click="openModal('lg')" ng-show="isLoggedIn()">
+				 <span class="glyphicon glyphicon-edit"></span> Edit
+			</a>		
+			</h3>
+			<table class="location-info">
+				<tr>
+					<td class="location-td one" style="padding-right:15px; width:280px;">		
+					  <img src="{{location.details.pictures[0]}}" ng-if="location.details.pictures.length > 0" style="width:250px;heigth:auto;" />
+					  <img src="http://localhost:9000/assets/images/locations/default-location-images/default-{{location.details.category.name}}.png" ng-if="location.details.pictures.length == 0" style="width:250px;heigth:auto;"/>
+					</td>
+					<!--<style>.location-td.two, .location-td.three {display:block;}</style>-->
+					<td class="location-td two" style="font-size:18px;vertical-align:top;width:125px;">
+						<span style="font-weight:bold;">Who? </span>
+						<br>
+						<span style="font-weight:bold;">Where? </span>
+						<br>
+						<br>
+						<span style="font-weight:bold;">What? </span>
+						<br>
+						<span style="font-weight:bold;" ng-show="location.owner._id == currentUser._id || isFriend(location.owner._id) && location.owner.name != 'Admin'">When? </span>
+						<br>
+						<span style="font-weight:bold;" ng-show="location.owner._id == currentUser._id || isFriend(location.owner._id) && location.owner.name != 'Admin'">How long? </span>
+					</td>
+					<td class="location-td three" style="font-size:18px;vertical-align:top;">
+						<span ng-href="/users/{{location.owner._id}}" ng-if="location.owner.name == 'Admin'" class="loc-owner" ng-show="location.owner">{{location.owner.name}}</span>
+						<span><a ng-href="/users/{{location.owner._id}}" ng-if="location.owner.name != 'Admin'" class="loc-owner" ng-show="location.owner">{{location.owner.name}}</a><span>
+						<br>
+						<span class="loc-address" style="font-style:normal;">{{location.address.street}}</span><br>
+						<span>{{location.address.zipcode }} {{location.address.city}}</span>
+						<br>
+						<span><a ng-href="categories/{{location.details.category._id}}">{{location.details.category.name}}</a></span>
+						<br>
+						<span class="loc-date" ng-show="location.owner._id == currentUser._id || isFriend(location.owner._id) && location.owner.name != 'Admin'">{{location.details.dateTime | date:'dd/MM/yyyy HH:mm a'}} </span>
+						<br>
+						<span class="loc-duration" ng-show="location.owner._id == currentUser._id || isFriend(location.owner._id) && location.owner.name != 'Admin'">{{location.details.duration}} hours</span>
+					</td>
+					<style>.location-td.four {display:none;}</style>
+					<td class="location-td four" style="font-size:18px;vertical-align:top;">
+						<span style="font-weight:bold;">Who? </span>
+						<span ng-href="/users/{{location.owner._id}}" ng-if="location.owner.name == 'Admin'" class="loc-owner" ng-show="location.owner">{{location.owner.name}}</span>
+						<span><a ng-href="/users/{{location.owner._id}}" ng-if="location.owner.name != 'Admin'" class="loc-owner" ng-show="location.owner">{{location.owner.name}}</a><span>
+						<br>
+						<span style="font-weight:bold;">Where? </span>
+						<span class="loc-address" style="font-style:normal;">{{location.address.street}}, </span>
+						<span>{{location.address.zipcode }} {{location.address.city}}</span>
+						<br>
+						<span style="font-weight:bold;">What? </span>
+						<span><a ng-href="categories/{{location.details.category._id}}">{{location.details.category.name}}</a></span>
+						<br>
+						<span style="font-weight:bold;" ng-show="location.owner._id == currentUser._id || isFriend(location.owner._id) && location.owner.name != 'Admin'">When? </span>
+						<span class="loc-date" ng-show="location.owner._id == currentUser._id || isFriend(location.owner._id) && location.owner.name != 'Admin'">{{location.details.dateTime | date:'dd/MM/yyyy HH:mm a'}} </span>
+						<br>
+						<span style="font-weight:bold;" ng-show="location.owner._id == currentUser._id || isFriend(location.owner._id) && location.owner.name != 'Admin'">How long? </span>
+						<span class="loc-duration" ng-show="location.owner._id == currentUser._id || isFriend(location.owner._id) && location.owner.name != 'Admin'">{{location.details.duration}} hours</span>
+					</td>
+				</tr>
+			</table>
 
-      <a ng-href="categories/{{location.details.category._id}}"><h3>{{location.details.category.name}}</h3></a>
+		  <h3 ng-show="location.details.description.length >= 1 || location.details.imports.length >= 1" style="margin-top:15px;">Description</h3>
 
-      <p class="loc-owner" ng-show="location.owner">Created by: <a ng-href="/users/{{location.owner._id}}">{{location.owner.name}}</a></p>
+		  <div class="description" ng-show="location.details.description.length >= 1">
+			 <p class="loc-description">{{location.details.description}}</p>
+		  </div>
 
-      <p class="loc-address">{{location.address.street}}, {{location.address.zipcode }} {{location.address.city}}</p>
+		  <div class="description" ng-show="location.details.imports.length >= 1">
+			 <p class="loc-imports" ng-bind-html="location.details.imports"></p>
+		  </div>
 
-      <p class="loc-duration"><strong>Duration:</strong> {{location.details.duration}}h</p>
+		  <div class="description" ng-show="location.details.links.length >= 1">
+			 <h3>Links</h3>
+			 <div class="loc-links">
+			   <a href="{{link.url}}" class="loc-links link" ng-repeat="link in location.details.links" target="_blank">{{link.name}}<br/></a>
+			 </div>
+		  </div>
+		  
+		  <p class="loc-publication" ng-if="location.details.members.length == 0"><strong>Published for all Friends<strong></p>
+		  <div ng-if="location.details.members.length > 0">
+			  <p class="loc-members"><strong>Members:</strong></p>
+			  <ul class="members-list">
+				<li ng-repeat="u in location.details.members" ng-model="member" ng-init="member = getUser(u);" style="list-style:none;display:inline;color:#000;">
+				<a ng-href="/users/{{u}}" ><img src="http://localhost:9000/assets/images/users/{{member.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" style="width:50px;height:50px;margin:5px;" popover-placement="bottom" popover="{{ member.name }}" popover-trigger="mouseover mouseleave"/></a></li>
+			  </ul>
+		  </div>
 
-      <h3 ng-show="location.details.description.length >= 1 || location.details.imports.length >= 1">Description</h3>
+		  <div class="social">
+			 <a ng-click="share(social.name)" ng-repeat="social in socials"><img src="{{social.icon}}" alt="{{social.name}}"></a>
+		  </div>
 
-      <div class="description" ng-show="location.details.description.length >= 1">
-         <p class="loc-description">{{location.details.description}}</p>
-      </div>
-
-      <div class="description" ng-show="location.details.imports.length >= 1">
-         <p class="loc-imports" ng-bind-html="location.details.imports"></p>
-      </div>
-
-      <div class="description" ng-show="location.details.links.length >= 1">
-         <h3>Links</h3>
-         <div class="loc-links">
-           <a href="{{link.url}}" class="loc-links link" ng-repeat="link in location.details.links" target="_blank">{{link.name}}<br/></a>
-         </div>
-      </div>
-
-      <div class="social">
-         <a ng-click="share(social.name)" ng-repeat="social in socials"><img src="{{social.icon}}" alt="{{social.name}}"></a>
-      </div>
-
-   </div>
-
-    <div class="col-sm-6">
+	   </div>
+	</div>
+	
+    <div class="col-sm-6" style="margin-top:20px;">
       <ui-gmap-google-map
         center="map.center"
         zoom="map.zoom"
@@ -50,21 +119,21 @@
       </ui-gmap-google-map>
     </div>
   </div>
+  
+    <hr ng-show="location.details.pictures.length >= 1" />
 
-  <hr ng-show="location.details.pictures.length >= 1" />
+	<div class="location-container row images" style="margin: 20px 15px 20px 15px; max-width:709px;" ng-show="location.details.pictures.length >= 1">
+		<div class="col-sm-12 images">
+		  <h3 class="location-name" style="padding: 5px 5px 5px 15px; margin: 20px 0px;">Images</h3>
+		  <div ng-repeat="pic in location.details.pictures" class="loc-images col-sm-4">
+			 <a ng-click="openImage($index)" class="loc-picture thumbnail">
+				<img src="{{pic}}" alt="">
+			  </a>
+		  </div>
+		</div>
+	</div>
 
-  <div class="row" ng-show="location.details.pictures.length >= 1">
-    <div class="col-sm-12">
-      <h3>Images</h3>
-      <div ng-repeat="pic in location.details.pictures" class="loc-images col-sm-4">
-         <a ng-click="openImage($index)" class="loc-picture thumbnail">
-            <img src="{{pic}}" alt="">
-          </a>
-      </div>
-    </div>
-  </div>
-
-  <hr/>
+	<hr/>
 
   <div id="disqus_thread" class="comments col-sm-12" ng-controller="DisqusCtrl"></div>
 

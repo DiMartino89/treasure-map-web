@@ -35,7 +35,7 @@ exports.index = function (req, res) {
       }
     })
       .populate('details.category')
-      .populate('owner', '_id name role friends')
+      .populate('owner', '_id name role friends picture')
       .limit(limit)
       .exec(function (err, locations) {
         if (err) {
@@ -46,7 +46,7 @@ exports.index = function (req, res) {
   } else {
     Location.find()
       .populate('details.category')
-      .populate('owner', '_id name role friends')
+      .populate('owner', '_id name role friends picture')
       .exec(function (err, locations) {
         if(err) { return handleError(res, err); }
         return res.json(200, locations);
@@ -58,7 +58,7 @@ exports.index = function (req, res) {
 exports.show = function(req, res) {
   Location.findById(req.params.id)
     .populate('details.category')
-    .populate('owner', '_id name role friends')
+    .populate('owner', '_id name role friends picture')
     .exec(function(err, location) {
       if(err) { return handleError(res, err); }
       if(!location) { return res.send(404); }

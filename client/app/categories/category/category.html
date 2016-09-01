@@ -1,10 +1,37 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
+<div ng-include="'components/chat/chat.html'"></div>
 
 <div class="container">
-  <h1>{{category.name}}</h1>
-  <img class="pull-right" ng-src="{{category.imgUrl}}" alt=""/>
-
-  <ul>
-    <li class="location" ng-repeat="l in locations"><a ng-href="locations/{{l._id}}">{{l.details.name}}</a> <span class="loc-address">{{l.address.street}}, {{l.address.zipcode }} {{l.address.city}}</span></li>
-  </ul>
+	 <div class="row">
+		<div class="col-sm-6">
+			<div class="category-container">
+			  <h3 class="category-name">{{category.name}}</h3>
+			  <table class="category-table">
+				 <tr>
+					<td class="category-td one" style="width:50%; padding-bottom: 15px;">
+						<img ng-src="http://localhost:9000/assets/images/locations/default-location-images/default-{{category.name}}.png" style="width:300px;height:auto;margin-right:20px;" alt=""/>
+					</td>
+					<td class="category-td two">
+						<img ng-src="{{category.imgUrl}}" alt=""/>
+						<br>
+						<span style="font-weight:bold;">Amount of Locations:</span><span> {{locations.length}}</span>
+						<br>
+						<span style="font-weight:bold;">Examples:</span>
+						<br>
+						<ul>
+							<li ng-repeat="image in category.pictures"><img class="example-picture" ng-src="{{image}}" ng-click="openImage($index)" style="width:160px;height:auto;margin-right:10px;cursor:pointer;"/></li>
+						</ul>
+					</td>
+				 </tr>
+			  </table>
+			  <table>
+				 <tr>
+					<td style="color:#fff;">
+						<p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
+					</td>
+				</tr>
+			  </table>
+			</div>
+		</div>
+	</div>
 </div>

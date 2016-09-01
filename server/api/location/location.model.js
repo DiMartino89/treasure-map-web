@@ -20,12 +20,15 @@ var LocationSchema = new Schema({
   			ref: 'Category'
   		},
   		description: String,
-      imports: String,
+	    publication: Boolean,
+        imports: String,
   		pictures: [{ type: String, unique: true }],
-      links: [{
-         name: String,
-         url: String
-      }],
+		members: [{ type: Schema.ObjectId, ref: 'User' }],
+        links: [{
+			name: String,
+			url: String
+        }],
+  		dateTime: Date,
   		duration: Number
   	},
   createdAt: { type: Date, default: Date.now },

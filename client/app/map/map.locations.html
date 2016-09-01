@@ -1,7 +1,32 @@
-<h3>Locations</h3>
+<h3 style="color:#fff;">Locations</h3>
+<style>
+	li.location .navigateTo:hover {background-color:#666; cursor:pointer;}
+	form {width:100%; display:block;}
+	.form-group.locations {width:100%;}
+	.input-group.locations {width:100%;margin:0px 0px 25px;}
+</style>
 
-<ul>
-  <li class="location" ng-repeat="l in locations | orderBy:'-details.name':true | filter:search.searchTerm"><a ng-href="locations/{{l._id}}">{{l.details.name}}</a> - <a
-    ng-href="categories/{{l.details.category._id}}" class="loc-category">{{l.details.category.name}}</a> - <span
-    class="loc-address">{{l.address.street}}, {{l.address.zipcode }} {{l.address.city}}</span></li>
+<form class="form-inline pull-right">
+    <div class="form-group locations">
+      <label class="sr-only" for="userFilter">Filter locations</label>
+      <div class="input-group locations">
+        <div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
+        <input type="text" class="form-control" id="locationsFilter" placeholder="Filter locations" ng-model="locationsFilter">
+      </div>
+    </div>
+  </form>
+
+<ul style="height:200px;">
+  <li class="location" style="color:#fff;" ng-repeat="l in filteredLocations | orderBy:'-details.name':true | filter:locationsFilter" ng-if="l.owner.name == 'Admin' || isFriend(l.owner._id) && l.details.publication == true || isFriend(l.owner._id) && l.details.members.indexOf(currentUser._id) !== -1 || l.owner._id == currentUser._id" ng-click="showLocationOnMap(l.coordinates.latitude, l.coordinates.longitude)">
+  <table><tbody><tr>
+  <td style="width:90%;vertical-align:middle;padding:0px !important;">
+	  <a style="text-transform: uppercase;" ng-href="locations/{{l._id}}">{{l.details.name}}</a><br>  
+	  <span style="color:#fff;" class="loc-address">{{l.address.street}}, {{l.address.zipcode }} {{l.address.city}}</span><br>
+	  <span style="color:#fff;" class="loc-owner">created by <a ng-href="users/{{l.owner._id}}">{{l.owner.name}}</a></span>
+  </td>
+  <td class="navigateTo" style="width:20%;vertical-align:middle;padding:0px 10px;">
+	<span class="glyphicon glyphicon-map-marker" style="font-size:25px;padding:0px !important;" ng-click="showLocationOnMap(l.coordinates.latitude, l.coordinates.longitude)"></span>
+  </td></tr></tbody></table>
+  <!--<button ng-click="showLocationOnMap(l.coordinates.latitude, l.coordinates.longitude)">NavTo</button></li>
+  | filter:search.searchTerm-->
 </ul>

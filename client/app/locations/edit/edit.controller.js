@@ -1,7 +1,9 @@
 'use strict';
 
+var locationname;
+
 angular.module('treasuremapApp')
-  .controller('EditCtrl', function ($scope, $http, $timeout, uiGmapGoogleMapApi, Auth, Location, Lightbox, $stateParams, AppConfig) {
+  .controller('EditCtrl', function ($scope, $http, $timeout, uiGmapGoogleMapApi, Auth, Location, Lightbox, $stateParams, AppConfig, FileEditLocationUploadModal, FileUploader, picturesLength) {
     $scope.currentUser = Auth.getCurrentUser();
 
     uiGmapGoogleMapApi.then(function (maps) {
@@ -9,14 +11,15 @@ angular.module('treasuremapApp')
         $scope.showMap = true;
       }, 100);
     });
-
+	
     $scope.message = 'Hello';
     $scope.editLocation = Location.get({ id: $stateParams.id }, function() {
       $scope.mapNew.center = $scope.editLocation.coordinates;
       $scope.editLocation.details.category.url = $scope.editLocation.details.category.imgUrl;
       $scope.images = $scope.editLocation.details.pictures;
+	  $scope.date = $scope.editLocation.details.dateTime;
     });
-
+	
     $scope.openImage = function (index) {
       Lightbox.openModal($scope.images, index);
     };
@@ -66,6 +69,19 @@ angular.module('treasuremapApp')
         }
       }
     };
+	
+	$scope.invite = function(user) {
+	  if($scope.editLocation.details.members.indexOf(user._id) === -1) {
+		$scope.editLocation.details.members.push(user._id);
+	  } else {
+		var index = $scope.editLocation.details.members.indexOf(user._id);
+        $scope.editLocation.details.members.splice(index, 1);
+	  }
+    };
+	
+	$scope.takeOutMembers = function() {
+		$scope.editLocation.details.members.length = 0;
+	}
 
     $scope.removePicture = function(pic) {
       var index = $scope.editLocation.details.pictures.indexOf(pic);
@@ -118,9 +134,14 @@ angular.module('treasuremapApp')
           });
       } else {
         form.$valid = false;
+		$scope.alerts.push({
+              type: 'danger',
+              msg: 'Couldn\'t add new location! Please check the fields again!'
+        });
       }
     };
-
+	
+	/*
     var S3_BUCKET = AppConfig.s3_bucket;
      var creds = new AWS.CognitoIdentityCredentials({
         IdentityPoolId: AppConfig.aws_cognito,
@@ -132,7 +153,7 @@ angular.module('treasuremapApp')
      });
 
      var S3 = new AWS.S3({
-        region: s3_region
+        region: 'eu-central-1'
      });
 
     $scope.$watch('files', function () {
@@ -160,6 +181,48 @@ angular.module('treasuremapApp')
           });
         }
       }
+    };*/
+	
+	$scope.changeLocationPictures = function (amount) {
+		var length = picturesLength.getLength() + 1;		
+		for(var i=0; i < amount; i++) {
+			$scope.editLocation.details.pictures.push('http://localhost:9000/assets/images/locations/' + $stateParams.id + length + '.jpg');
+			length++;
+		}
+	};
+	
+	//UPLOAD-PICTURE-PART ==============================================
+	var fileName = '';
+	$scope.alerts = [];
+	
+	$scope.fileUploadOptions = {
+      url: '/api/location/upload',
+      success: function (fileItem) {
+		fileName = fileItem.file.name;
+        $scope.alerts.push({
+          type: 'success',
+          msg: '"' + fileItem.file.name + '" uploaded'
+        });
+      },
+      error: function (fileItem) {
+        $scope.alerts.push({
+          type: 'danger',
+          msg: '"' + fileItem.file.name + '" failed'
+        });
+      }
+    };
+	
+	/*$scope.showPath = function() {
+		alert($scope.currentUser.picture[0]);
+	};*/
+
+    $scope.open = function () {
+      var modal = new FileEditLocationUploadModal($scope.fileUploadOptions);
+      modal.open();
     };
 
+    $scope.closeAlert = function (index) {
+      $scope.alerts.splice(index, 1);
+    };
+	
   });

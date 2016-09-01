@@ -19,7 +19,12 @@ var UserSchema = new Schema({
   twitter: {},
   google: {},
   github: {},
-  friends: [{ type: Schema.Types.ObjectId, ref: 'User', unique: true }]
+  friends: [{ type: Schema.Types.ObjectId, ref: 'User', unique: true }],
+  requests: [{ type: Schema.Types.ObjectId, ref: 'User', unique: true }],
+  picture: [{ type: String, unique: true }],
+  description: String,
+  status: String,
+  friendslocations: Number
 });
 
 /**
@@ -44,7 +49,12 @@ UserSchema
       '_id': this._id,
       'name': this.name,
       'role': this.role,
-      'friends': this.friends
+      'friends': this.friends,
+	  'requests': this.requests,
+	  'picture': this.picture,
+	  'description': this.description,
+	  'status': this.status,
+	  'friendslocations': this.friendslocations
     };
   });
 
@@ -77,6 +87,25 @@ UserSchema
     if (authTypes.indexOf(this.provider) !== -1) return true;
     return hashedPassword.length;
   }, 'Password cannot be blank');
+
+// Validate name is not taken
+UserSchema
+  .path('name')
+  .validate(function(value, respond) {
+    var self = this;
+    this.constructor.findOne({name: value}, function(err, user) {
+      if(err) throw err;
+      if(user) {
+        if(self.id === user.id) return respond(true);
+        return respond(false);
+      }
+      respond(true);
+    });
+}, 'The specified name is already in use.');
+
+var validatePresenceOf = function(value) {
+  return value && value.length;
+};
 
 // Validate email is not taken
 UserSchema

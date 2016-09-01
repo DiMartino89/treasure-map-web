@@ -1,15 +1,71 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
+<div ng-include="'components/chat/chat.html'"></div>
 
 <div class="container">
-  <ul>
-    <li class="location" ng-repeat="l in locations | orderBy:'-details.name':true | filter:search.searchTerm"><a ng-href="locations/{{l._id}}">{{l.details.name}}</a> - <a
-      ng-href="categories/{{l.details.category._id}}" class="loc-category">{{l.details.category.name}}</a> - <span
-      class="loc-address">{{l.address.street}}, {{l.address.zipcode }} {{l.address.city}}</span></li>
-  </ul>
+  <div class="row">
+    <div class="col-sm-12"> 
+		<h1 style="text-align:center;">Locations</h1>
+	</div>
+	<div class="col-sm-12"> 
+		<div class="locations-container">
+			<form class="form-inline pull-right locations">
+				<div class="form-group locations">
+				  <label class="sr-only" for="userFilter">Filter locations</label>
+				  <div class="input-group locations">
+					<div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
+					<input type="text" class="form-control" id="locationsFilter" placeholder="Filter locations" ng-model="locationsFilter">
+				  </div>
+				</div>
+			</form>
 
-
-  <button class="btn btn-primary btn-lg" type="button" ng-click="openModal('lg')" ng-show="isLoggedIn()">
-    Add new Location
-  </button>
-
+			<ul class="locations-list">
+				<li class="location" ng-repeat="l in locations | orderBy:'-details.name':true | filter: locationsFilter" ng-if="l.owner.name == 'Admin' || isFriend(l.owner._id) && l.details.publication == true || isFriend(l.owner._id) && l.details.members.indexOf(currentUser._id) !== -1">
+					<table>
+						<tr>
+							<td class="location-td one">
+								<a ng-href="/locations/{{l._id}}" ng-if="l.details.pictures.length > 0"><img src="{{l.details.pictures[0]}}" style="width:200px;height:auto;margin:5px 15px 5px 5px;"/></a>
+								<a ng-href="/locations/{{l._id}}" ng-if="l.details.pictures.length == 0"><img src="http://localhost:9000/assets/images/locations/default-location-images/default-{{l.details.category.name}}.png" ng-if="l.details.pictures.length == 0" style="width:200px;heigth:auto;margin:5px 15px 5px 5px;" /></a>
+							</td>
+							<style>.location-td two, .location-td three {display:block;}</style>
+							<td class="location-td two" style="width:100px;">
+								<span style="font-weight:bold;">Name: </span>
+								</br>
+								<span style="font-weight:bold;">Category: </span>
+								</br>
+								<span class="loc-address" style="font-weight:bold; font-style:normal;"> Address: </span>
+								</br>
+								<span style="font-weight:bold;">Owner: </span>
+							</td>
+							<td class="location-td three">
+								<a class="location-name-normal" ng-href="locations/{{l._id}}">{{l.details.name}}</a>
+								</br>
+								<a ng-href="categories/{{l.details.category._id}}" class="loc-category">{{l.details.category.name}}</a>
+								</br>
+								<span class="loc-address">{{l.address.street}}, {{l.address.zipcode }} {{l.address.city}}</span>
+								</br>
+								<a ng-href="users/{{l._id}}" ng-if="l.owner.name != 'Admin'">{{l.owner.name}}</a>
+								<span ng-if="l.owner.name == 'Admin'">{{l.owner.name}}</span>
+							</td>
+							<style>.location-td.four {display:none;}</style>
+							<td class="location-td four">
+								<span style="font-weight:bold;width:20%;">Name: </span>
+								<a class="location-name-normal" ng-href="locations/{{l._id}}">{{l.details.name | limitTo: 16}}<span ng-if="l.details.name.length > 16">...</span></a>
+								</br>
+								<span style="font-weight:bold;">Category: </span>
+								<a ng-href="categories/{{l.details.category._id}}" class="loc-category">{{l.details.category.name}}</a>
+								</br>
+								<span class="loc-address" style="font-weight:bold; font-style:normal;"> Address: </span>
+								<span class="loc-address">{{l.address.street | limitTo: 14}}...</span>
+								</br>
+								<span style="font-weight:bold;">Owner: </span>
+								<a ng-href="users/{{l._id}}" ng-if="l.owner.name != 'Admin'">{{l.owner.name | limitTo: 16}}<span ng-if="l.owner.name.length > 18">...</span></a>
+								<span ng-if="l.owner.name == 'Admin'">{{l.owner.name}}</span>
+							</td>
+						</tr>
+					</table>
+				</li>
+			</ul>
+		</div>
+	</div>
+  </div>
 </div>

@@ -1,0 +1,10 @@
+<div class="row modal-header">
+   <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span></button>
+   <h1 class="modal-title" style="margin-top:0px;">Introduction Video</h1>
+
+   <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+</div>
+
+<div class="row modal-body">
+	<video src="app/account/signup/video/SampleVideo.mp4" style="width:100%;height:auto;" poster="app/account/signup/video/SampleStandbild.jpg" autobuffer autoplay controls />
+</div>

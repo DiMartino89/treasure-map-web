@@ -4,52 +4,63 @@
     <div class="container">
       <div class="navbar-header">
         <a href="/" class="navbar-brand">
-          <img src="assets/images/logo.png" alt="treasuremap" />
-          <h1 class="title">Treasure Map</h1>
-        </a>
-        <!--div class="middlePart" >
-          <div class="addLocation" style="float:left">
-          <a href="/" id="addNewLocation" ng-click="openModal('lg')" ng-show="isLoggedIn()" style="margin-top: 18px">Add new location</a>
-       </div-->
-       <a class="nav-icon navbar-right" ng-class="{'isVisible': search.showSidebar}" ng-click="search.showSidebar = !search.showSidebar"></a>
-       <form class="navbar-form search" role="search" ng-hide="showSearch != 'map' || smallScreen()">
-           <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-           <div ng-attr-id="{{ !smallScreen() && 'address-search' }}"></div>
-           <span ng-click="locate()" class="glyphicon glyphicon-record" aria-hidden="true" popover-placement="bottom" popover="Click here for your location!" popover-trigger="mouseover mouseleave"></span>
-       </form>
-
-       <!--div class="registration">
-         <li><a href="/login" ng-hide="isLoggedIn()" style="position:relative"> Login</a></li>
-         <li><a href="/signup" ng-hide="isLoggedIn()">Sign up</a></li>
-         <li class="logout" ng-show="isLoggedIn()"><a href="" ng-click="logout()">Logout</a></li>
-       </div-->
+          <img src="assets/images/logo.png" alt="treasuremap" />  
+		   <h1 class="title">Treasure Map</h1>
+		   </a>
+		   <div class="middlePart" >
+		   <div ng-controller="MapCtrl">
+			   <input type="text" value="{{ getCurrentUser().name }}" class="currUserName" ng-model="nickname" style="display:none;"/>
+		   </div>
+		   <a class="nav-icon navbar-right" ng-class="{'isVisible': search.showSidebar}" ng-click="search.showSidebar = !search.showSidebar"></a>
+		   
+		<!-- Profile picture -->
+		   <a class="navbar-picture" ng-show="isLoggedIn()" ng-href="/users/{{getCurrentUser()._id}}" style="padding-left:25px; border-left: 1px solid #CCC;"><img popover-placement="bottom" popover="Your Profile" popover-trigger="mouseover mouseleave" src="http://localhost:9000/assets/images/users/{{getCurrentUser().name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" style="width:50px; height:50px;"/></a> 
+		   
+		<!-- Add Location -->
+		   <a class="navbar-addlocation" href="/" ng-click="openModalNew('lg')" ng-show="isLoggedIn()"><img popover-placement="bottom" popover="Add a Location" popover-trigger="mouseover mouseleave" src="assets/images/AddLocation.png"/></a>
+		
+		<!-- Calendar -->
+		   <a class="navbar-calendar" ng-click="openModalCalendar('lg')" ng-show="isLoggedIn()"><img popover-placement="bottom" popover="Your Appointments" popover-trigger="mouseover mouseleave" src="assets/images/CalendarIcon.png"/></a>
+		
+		<!-- Chat -->
+			<a class="navbar-startChat" onclick="showChat()" ng-show="isLoggedIn()"><img popover-placement="bottom" popover="Messenger" popover-trigger="mouseover mouseleave" src="assets/images/ChatIcon.png"/></a>
+		   <!--<span class="stateChange-popup-chat" style="background-color:#F21109;border-radius:2px;color:#fff;position:absolute;padding:1px 3px;"></span></a>-->
+		 
+		<!-- New Location from Friends -->
+		   <a class="navbar-newLocations" ng-href="/feed" ng-show="isLoggedIn()" ng-click="saveFriendsLocations()" ng-init="getAllFriendsLocations()"><img popover-placement="bottom" popover="{{(newLocations.length - getCurrentUser().friendslocations) / 2}} new location(s)" popover-trigger="mouseover mouseleave" src="assets/images/MapIcon.png"/>
+		   <span class="stateChange-popup" ng-if="newLocations.length - getCurrentUser().friendslocations > 0">{{(newLocations.length - getCurrentUser().friendslocations) / 2}}</span></a>
+		
+		<!-- New Friendrequests -->
+		   <a class="navbar-newFriends" ng-href="/users" ng-show="isLoggedIn()"><img popover-placement="bottom" popover=" {{getCurrentUser().requests.length}} new friendrequest(s)" popover-trigger="mouseover mouseleave" src="assets/images/FriendsIcon.png"/>
+		   <span class="stateChange-popup" ng-if="getCurrentUser().requests.length > 0">{{getCurrentUser().requests.length}}</span></a>
+		
+		<!-- Search Form -->
+		   <form class="navbar-form search" role="search" ng-hide="showSearch != 'map'">
+			   <span class="glyphicon glyphicon-search normal" aria-hidden="true"></span>
+			   <div ng-attr-id="{{ 'address-search' }}"></div>
+			   <span ng-click="locate()" class="glyphicon glyphicon-record normal" aria-hidden="true" popover-placement="bottom" popover="Click to get your position!" popover-trigger="mouseover mouseleave"></span>
+		   </form>
       </div>
     </div>
   </div>
 
-  <div class="sidebar-nav" ng-class="{'isVisible': search.showSidebar}">
+  <div class="input-group-addon mobile record" ng-if="currentPath === '/'"><span class="glyphicon glyphicon-record" ng-click="locate()" aria-hidden="true"></span></div>
+
+  <div id="sidebar" class="sidebar-nav" ng-class="{'isVisible': search.showSidebar}">
 
     <ul class="nav navbar-nav">
-      <li>
-       <div class="form-group search-small" ng-hide="showSearch != 'map' || !smallScreen()">
-          <form class="navbar-form" role="search">
-             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-             <div ng-attr-id="{{ smallScreen() && 'address-search' }}"></div>
-             <span ng-click="locate()" class="glyphicon glyphicon-record locate" aria-hidden="true"></span>
-          </form>
-       </div>
-      </li>
-      <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
+      <li ng-repeat="item in menu" ng-click="select(item)" ng-class="{active: isActive(item)}">
         <a ui-sref="{{item.link}}"><span class="glyphicon {{item.icon}}" aria-hidden="true"></span>{{item.title}}</a>
       </li>
-      <li ng-hide="smallScreen()">
+      <li ng-hide="smallScreen()" ng-click="select(item)">
         <a ng-click="isFilterCollapsed = !isFilterCollapsed"><span class="glyphicon glyphicon-filter" aria-hidden="true"></span>Filter</a>
         <div collapse="isFilterCollapsed">
             <div class="btn-group filter">
        		  <div class="well well-lg">
-                 <button ng-show="isLoggedIn()" type="button" class="btn btn-default btn-sm col-sm-4" ng-click="filteredCategory = false; search.filterByMyLocations = false" ng-model="search.filterByFriends" btn-checkbox><img src="assets/images/FriendsLocation.png" alt="Friends"/></button>
-                 <button ng-show="isLoggedIn()" type="button" class="btn btn-default btn-sm col-sm-4" ng-click="filteredCategory = false; search.filterByFriends = false" ng-model="search.filterByMyLocations" btn-checkbox><img src="assets/images/UserLocation.png" alt="Users"/></button>
-                 <button type="button" class="btn btn-default btn-sm col-sm-4" ng-click="filterCategory(category.name); search.filterByFriends = false; search.filterByMyLocations = false"  name="category" ng-model="filteredCategory" btn-radio="'{{category.name}}'" ng-repeat="category in categories"><img ng-src="{{category.imgUrl}}" alt="'{{category.name}}'"/></button>
+                 <button ui-sref="map.locations" ng-show="isLoggedIn()" type="button" class="btn btn-default btn-sm col-sm-4 ng-scope" ng-click="filteredCategory = false; search.filterByCategory = false; search.filterByFriends = false; search.filterByAllRecommendedLocations = false; search.filterByMyLocations = true;" ng-model="search.filterByMyLocations" popover-placement="bottom" popover="My Locations" popover-trigger="mouseover mouseleave" btn-checkbox><img src="assets/images/UserLocation.png" alt="Users"/></button>
+                 <button ui-sref="map.locations" ng-show="isLoggedIn()" type="button" class="btn btn-default btn-sm col-sm-4 ng-scope" ng-click="filteredCategory = false; search.filterByCategory = false; search.filterByMyLocations = false; search.filterByAllRecommendedLocations = false; search.filterByFriends = true;" ng-model="search.filterByFriends" popover-placement="bottom" popover="Friends" popover-trigger="mouseover mouseleave" btn-checkbox><img src="assets/images/FriendsLocation.png" alt="Friends"/></button>
+				 <button ui-sref="map.locations" ng-show="isLoggedIn()" type="button" class="btn btn-default btn-sm col-sm-4 ng-scope" ng-click="filteredCategory = false; search.filterByCategory = false; search.filterByMyLocations = false; search.filterByFriends = false; search.filterByAllRecommendedLocations = true;" ng-model="search.filterByAllRecommendedLocations"popover-placement="bottom" popover="Recommended" popover-trigger="mouseover mouseleave" btn-checkbox><img src="assets/images/RecommendedLocation.png" alt="Recommended"/></button>
+                 <button ui-sref="map.locations" ng-show="isLoggedIn()" type="button" class="btn btn-default btn-sm col-sm-4" ng-click="filterCategory(category.name); search.filterByFriends = false; search.filterByAllRecommendedLocations = false; search.filterByMyLocations = false;" name="category" ng-model="filteredCategory" btn-radio="'{{category.name}}'" ng-repeat="category in categories" popover-placement="bottom" popover="'{{category.name}}'" popover-trigger="mouseover mouseleave"><img ng-src="{{category.imgUrl}}" alt="'{{category.name}}'"/></button>
                </div>
             </div>
 	     </div>
@@ -58,15 +69,15 @@
 
     <footer>
       <ul class="nav navbar-nav">
-         <li ng-show="isLoggedIn()" class="current-user">
+         <!--<li ng-show="isLoggedIn()" class="current-user">
            <a href="/user/me"><p class="navbar-text">Hello {{ getCurrentUser().name }}</p></a>
-         </li>
+         </li>-->
         <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}"><a href="/admin"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>Admin</a></li>
         <li ng-hide="isLoggedIn()" ng-class="{active: isActive('/login')}">
           <a href="/login"></span><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>Login</a>
         </li>
         <li ng-hide="isLoggedIn()" ng-class="{active: isActive('/signup')}"><a href="/signup"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>Sign up</a></li>
-        <li ng-show="isLoggedIn()" ng-class="{active: isActive('/settings')}">
+        <li ng-show="isLoggedIn()" ng-class="{active: isActive('/settings')}" style="border-top: 1px solid #e7e7e7;">
           <a href="/settings"></span><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>Settings</a>
         </li>
         <li ng-show="isLoggedIn()" ng-class="{active: isActive('/logout')}"><a href="" ng-click="logout()"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>Logout</a>
@@ -78,7 +89,66 @@
         <a href="http://www.htw-berlin.de/impressum/" target="_blank">Imprint</a>
       </div>
     </footer>
+  </div>
+  
+  
+  <div id="sidebar" class="sidebar-nav mobile" ng-class="{'isVisible': search.showSidebar}">
+    <ul class="nav navbar-nav">
+      <li ng-href="/" class="mobile-menu-item">
+        <a ng-href="/"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span>Map</a>
+      </li>
+	  <li ng-href="/feed" class="mobile-menu-item">
+        <a ng-href="/feed" ng-click="saveFriendsLocations()" ng-init="getAllFriendsLocations()"><span class="glyphicon glyphicon-bullhorn" aria-hidden="true"></span>Feed
+		<span class="stateChange-popup" ng-if="newLocations.length - getCurrentUser().friendslocations > 0">{{(newLocations.length - getCurrentUser().friendslocations) / 2}}</span></a>
+      </li>
+	  <li ng-href="/users" class="mobile-menu-item">
+        <a ng-href="/users"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>Friends
+		<span class="stateChange-popup" ng-if="getCurrentUser().requests.length > 0">{{getCurrentUser().requests.length}}</span></a>
+      </li>
+	  <li ng-href="/locations" class="mobile-menu-item">
+        <a ng-href="/locations"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>Locations</a>
+      </li>
+      <li class="mobile-menu-item">
+        <a><span class="glyphicon glyphicon-filter" aria-hidden="true"></span>Filter</a>
+		<div>
+            <div class="btn-group filter">
+       		  <div class="well well-lg">
+                 <button ng-show="isLoggedIn()" type="button" class="btn btn-default btn-sm col-sm-4 ng-scope" ng-click="filteredCategory = false; search.filterByCategory = false; search.filterByFriends = false; search.filterByAllRecommendedLocations = false; search.filterByMyLocations = true;" ng-model="search.filterByMyLocations"  btn-checkbox><img src="assets/images/UserLocation.png" style="width:32%;" alt="Users"/></button>
+                 <button ng-show="isLoggedIn()" type="button" class="btn btn-default btn-sm col-sm-4 ng-scope" ng-click="filteredCategory = false; search.filterByCategory = false; search.filterByMyLocations = false; search.filterByAllRecommendedLocations = false; search.filterByFriends = true;" ng-model="search.filterByFriends" btn-checkbox><img src="assets/images/FriendsLocation.png" style="width:32%;" alt="Friends"/></button>
+				 <button ng-show="isLoggedIn()" type="button" class="btn btn-default btn-sm col-sm-4 ng-scope" ng-click="filteredCategory = false; search.filterByCategory = false; search.filterByMyLocations = false; search.filterByFriends = false; search.filterByAllRecommendedLocations = true;" ng-model="search.filterByAllRecommendedLocations"btn-checkbox><img src="assets/images/RecommendedLocation.png" style="width:32%;" alt="Recommended"/></button>
+                 <button ng-show="isLoggedIn()" type="button" class="btn btn-default btn-sm col-sm-4" ng-click="filterCategory(category.name); search.filterByFriends = false; search.filterByAllRecommendedLocations = false; search.filterByMyLocations = false;" name="category" ng-model="filteredCategory" btn-radio="'{{category.name}}'" ng-repeat="category in categories"><img ng-src="{{category.imgUrl}}" style="width:32%;" alt="'{{category.name}}'"/></button>
+               </div>
+            </div>
+	     </div>
+      </li>
+    </ul>
 
+    <footer>
+      <ul class="nav navbar-nav">
+        <li ng-show="isAdmin()" ng-class="{active: isActive('/admin')}"><a href="/admin"><span class="glyphicon glyphicon-dashboard" aria-hidden="true"></span>Admin</a></li>
+        <li ng-hide="isLoggedIn()" ng-class="{active: isActive('/login')}">
+          <a href="/login"></span><span class="glyphicon glyphicon-log-in" aria-hidden="true"></span>Login</a>
+        </li>
+        <li ng-hide="isLoggedIn()" ng-class="{active: isActive('/signup')}"><a href="/signup"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>Sign up</a></li>
+        <li ng-show="isLoggedIn()" ng-class="{active: isActive('/settings')}" style="border-top: 1px solid #e7e7e7;">
+          <a href="/settings"></span><span class="glyphicon glyphicon-cog" aria-hidden="true"></span>Settings</a>
+        </li>
+        <li ng-show="isLoggedIn()" ng-class="{active: isActive('/logout')}"><a href="" ng-click="logout()"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>Logout</a>
+        </li>
+      </ul>
+      <!--<div class="copy">
+        <p>Copyright &copy; {{copyright}} - Team Treasure Map</p>
+        <a href="http://www.htw-berlin.de/impressum/" target="_blank">Imprint</a>
+      </div>-->
+    </footer>
+  </div>
+  
+  <div class="bottom-navbar mobile">
+	<a class="navbar-addlocation mobile" href="/" ng-click="openModalNew('lg')" ng-show="isLoggedIn()"><img src="assets/images/AddLocation.png"/></a>
+	   
+	<a class="navbar-calendar mobile" ng-click="openModalCalendar('lg')" ng-show="isLoggedIn()"><img src="assets/images/CalendarIcon.png"/></a>
+	
+	<a class="navbar-startChat mobile" onclick="showChat()" ng-show="isLoggedIn()"><img src="assets/images/ChatIcon.png"/></a>
   </div>
 </div>
 
@@ -91,4 +161,14 @@
        placeholder="Search a Location"
        required
        mongoose-error/>
-       </script>
+</script>
+
+<script>
+	function showChat() {
+		if($('.chat-container').hasClass('visible')) {
+			$('.chat-container').removeClass('visible');
+		} else {
+			$('.chat-container').addClass('visible');
+		}
+	}
+</script>

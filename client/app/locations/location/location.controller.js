@@ -1,13 +1,22 @@
 'use strict';
 
 angular.module('treasuremapApp')
-  .controller('LocationCtrl', function ($scope, $stateParams, Location, Auth, Lightbox, $modal, $location, $filter, $http, AppConfig) {
+  .controller('LocationCtrl', function ($scope, $stateParams, Location, Auth, User, Lightbox, $modal, $location, $filter, $http, AppConfig, picturesLength, $window) {
     $scope.location = Location.get({ id: $stateParams.id }, function() {
       $scope.map.center.latitude = $scope.location.coordinates.latitude;
       $scope.map.center.longitude = $scope.location.coordinates.longitude;
       $scope.location.details.category.url = $scope.location.details.category.imgUrl;
       $scope.images = $scope.location.details.pictures;
+	  picturesLength.setLength($scope.location.details.pictures.length);
     });
+	
+	$scope.currentUser = Auth.getCurrentUser();
+	$scope.isFriend = Auth.isFriend;
+	
+	$scope.getUser = function(userId) {
+		return User.get({ id: userId });
+	}
+	$scope.member = $scope.getUser();
 
     $scope.socials = [{
       'name': 'Facebook',
@@ -22,6 +31,7 @@ angular.module('treasuremapApp')
 
     $scope.share = function (service) {
         var title = $scope.location.details.name;
+		//var rating = $scope.location.details.rating;
         var desc = $filter('limitTo')($scope.location.details.description, 128);
         var image = $scope.location.details.pictures[0];
         var url = encodeURI($location.absUrl());
@@ -37,6 +47,18 @@ angular.module('treasuremapApp')
            window.open('https://pinterest.com/pin/create/button/?url=' + url + '&media=' + image + '&description=' + desc, 'Share Location', 'top=' + top + ',left=' + left + ',toolbar=0,status=0,width=' + width + ',height=' + height);
         }
      };
+	 
+	$scope.locations = Location.query();
+
+    $scope.delete = function(location) {
+      Location.remove({ id: location._id });
+      angular.forEach($scope.locations, function(l, i) {
+        if (l === location) {
+          $scope.locations.splice(i, 1);
+        }
+      });
+	  $window.location.reload();
+    };
 
     $scope.openImage = function (index) {
       Lightbox.openModal($scope.images, index);
@@ -134,3 +156,18 @@ angular.module('treasuremapApp')
           (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
         })();
     });
+	
+angular.module('treasuremapApp')  
+  .service('picturesLength', function() {
+		var length;
+
+        return {
+            getLength: function () {
+                return length;
+            },
+            setLength: function(value) {
+                length = value;
+            }
+        };
+
+  });

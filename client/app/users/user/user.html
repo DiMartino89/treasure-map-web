@@ -1,40 +1,120 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
+<div ng-include="'components/chat/chat.html'"></div>
 
 <div class="profile container">
   <div class="row">
-    <div class="col-sm-10">
-      <h1>{{user.name}} <small ng-if="user._id == currentUser._id">me</small></h1>
-      <!--<p>Email: {{user.email}}</p>-->
-    </div>
-
-    <div class="col-sm-2">
-      <button class="btn btn-primary"
-              ng-show="!isFriend(user._id) && user._id != currentUser._id"
-              ng-click="addFriend(user)">Add as Friend</button>
-      <button class="btn btn-primary"
-              ng-show="isFriend(user._id) && user._id != currentUser._id"
-              ng-click="removeFriend(user)">Remove Friend</button>
-    </div>
+    <div class="col-sm-6">
+		<div class="profile-container user">
+		  <style>h2.normal {display:block;}</style>
+		  <h2 class="profile-name normal">{{user.name}} <small ng-if="user._id == currentUser._id">Me</small>
+					<div style="float:right;">
+						<button class="btn btn-primary" style="vertical-align:top;height:40px;"
+								  ng-show="isFriend(user._id) && user._id != currentUser._id"
+								  ng-click="removeFriend(user); removeFriend2(user)">Remove Friend</button>
+						<button class="btn btn-primary" style="vertical-align:top;height:40px;"
+								  ng-show="!isRequest(user) && !isFriend(user._id) && user._id != currentUser._id"
+								  ng-click="sendRequest(user)">Send Friendrequest</button>
+						<button class="btn btn-primary" style="vertical-align:top;height:40px;"
+								  ng-show="isRequest(user) && !isFriend(user._id) && user._id != currentUser._id"
+								  ng-click="removeRequest(user)">Cancel Friendrequest</button>	
+					</div>						
+		    </h2>
+		    <style>h3.mobile {display:none;}</style>
+		    <h3 class="profile-name mobile">{{user.name}} <small ng-if="user._id == currentUser._id">Me</small>
+					<div style="float:right;">
+						<button class="btn btn-primary mobile"
+							  ng-show="isFriend(user._id) && user._id != currentUser._id"
+							  ng-click="removeFriend(user); removeFriend2(user)"><span class="glyphicon glyphicon-trash"></span></button>
+						<button class="btn btn-primary mobile"
+							  ng-show="!isRequest(user) && !isFriend(user._id) && user._id != currentUser._id"
+							  ng-click="sendRequest(user)"><span class="glyphicon glyphicon-plus"></span></button>
+						<button class="btn btn-primary mobile"
+							  ng-show="isRequest(user) && !isFriend(user._id) && user._id != currentUser._id"
+							  ng-click="removeRequest(user)"><span class="glyphicon glyphicon-remove-sign"></span></button>
+					</div>
+			</h3>
+			<table class="user-table">
+				<tr>
+					<td>
+						<img class="profile-picture" src="http://localhost:9000/assets/images/users/{{user.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" style="width:200px;height:200px;"/> 
+					</td>
+					<td style="width:100%;">
+						<span class="profile-status" style="display:block; float:right; vertical-align:top;" ng-if="currentUser._id == user._id || isFriend(user._id)"><span style="font-weight:bold;">Status:</span> {{user.status}}</span>
+						<span class="profile-description" style="display:block; float:right; vertical-align:top;" ng-if="currentUser._id == user._id || isFriend(user._id)">{{user.description}}</span>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
   </div>
-
-  <div class="row" ng-show="user.friends.length > 0">
-    <div class="col-sm-12">
-      <h3>Friends</h3>
-      <ul class="user-friends">
-        <li class="user-friend" ng-repeat="f in user.friends"><a ng-href="/users/{{f._id}}">{{f.name}}</a> <span ng-if="f._id == currentUser._id">me</span></li>
-      </ul>
-    </div>
+  <div class="row">
+	<div class="col-sm-6">
+		<div class="profile-container friends" ng-show="user.friends.length > 0" ng-if="currentUser._id == user._id || isFriend(user._id)">
+			<h3 class="profile-name"><span ng-if="currentUser._id == user._id">My</span> Friends <span>({{user.friends.length}})</span></h3>
+			<div>
+				<ul class="user-friends">
+					<li class="user-friend" ng-repeat="f in user.friends">
+					<table><tr><td style="width:20%;"><a ng-href="/users/{{f._id}}"><img style="width:115px; height:115px;" src="http://localhost:9000/assets/images/users/{{f.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" popover-placement="bottom" popover="{{ f.name }}" popover-trigger="mouseover mouseleave"/></a></td></tr></table>
+					</li>
+				</ul>
+			</div>
+		</div>
+	  </div>
   </div>
-
-  <div class="row" ng-show="locations.length > 0">
-    <div class="col-sm-12">
-      <h3>Locations</h3>
-      <ul class="user-locations">
-        <li class="user-location" ng-repeat="l in locations | orderBy:'-details.name':true"><a ng-href="locations/{{l._id}}">{{l.details.name}}</a> - <a
-          ng-href="categories/{{l.details.category._id}}" class="loc-category">{{l.details.category.name}}</a> - <span
-          class="loc-address">{{l.address.street}}, {{l.address.zipcode }} {{l.address.city}}</span></li>
-      </ul>
-    </div>
+  <div class="row">
+	<div class="col-sm-6">
+		<div class="profile-container requests" ng-if="user._id == currentUser._id" ng-show="user.requests.length > 0 && currentPath.indexOf(currentUser._id) > -1">
+			  <h3 class="profile-name">Requests</h3>
+			   <ul class="user-requests">
+				<li class="user-friend" ng-repeat="r in user.requests">
+					<table>
+						<tr>
+							<td>
+								<a ng-href="/users/{{r._id}}"><img style="width:115px; height:115px; margin-right:10px;" src="http://localhost:9000/assets/images/users/{{r.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'"/></a>
+							</td>
+							<td style="width:150px;">
+								<a ng-href="/users/{{r._id}}">{{r.name}}</a>
+							</td>
+							<td>	 
+								<button class="btn btn-primary normal"
+								  ng-show="!isFriend(r._id) && r._id != currentUser._id"
+								  ng-click="addFriend(r); addFriend2(r)">Accept</button>
+								<button class="btn btn-primary normal"
+								  ng-show="!isFriend(r._id) && r._id != currentUser._id"
+								  ng-click="removeRequest(r)">Refuse</button>
+								<button class="btn btn-primary mobile"
+								  ng-show="!isFriend(r._id) && r._id != currentUser._id"
+								  ng-click="addFriend(r); addFriend2(r)"><span class="glyphicon glyphicon-ok"></span></button>
+								<button class="btn btn-primary mobile"
+								  ng-show="!isFriend(r._id) && r._id != currentUser._id"
+								  ng-click="removeRequest(r)"><span class="glyphicon glyphicon-remove-sign"></span></button>
+							</td>
+						</tr>
+					</table>
+				</li>			
+			  </ul>
+		</div>
+	 </div>
   </div>
-
+  <div class="row">
+	<div class="col-sm-6">
+		<div class="profile-container locations" ng-show="locations.length > 0" ng-if="currentUser._id == user._id || isFriend(user._id)">
+			  <h3 class="profile-name"><span ng-show="user._id == currentUser._id">My </span>Locations <span></span>({{locations.length}})</h3>
+			  <ul class="user-locations">
+				<li class="user-location" ng-repeat="l in locations | orderBy:'-details.name':true" ng-if="currentUser._id == user._id || isFriend(user._id) && l.details.publication == true || isFriend(user._id) && l.details.members.indexOf(currentUser._id) !== -1">
+					<table class="user-locations-table">
+						<tr>
+							<td style="width:100%;">
+								<a style="margin:0px;" ng-href="locations/{{l._id}}"><div id="box" style="width:auto;height:200px;margin-left:0px;" ng-style="getLocationBackground(l)">
+								<div id="overlay-normal"><span id="plus">{{l.details.name}}</span></div>
+								<div id="overlay-mobile"><span id="plus">{{l.details.name}}</span></div>
+								</div></a>
+							</td>
+						</tr>
+					</table> 
+				</li>
+			  </ul>
+		</div>
+	</div>
+  </div>
 </div>

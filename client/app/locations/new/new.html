@@ -1,8 +1,6 @@
 <div class="row modal-header">
    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span></button>
    <h1 class="modal-title">New Location</h1>
-
-   <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 </div>
 
 <div class="row modal-body">
@@ -14,7 +12,7 @@
       <div class="form-group" ng-class="{ 'has-success': form.name.$valid && submitted,
                                             'has-error': form.name.$invalid && submitted }">
 
-        <label>Name</label>
+        <label>Name *</label>
         <input type="text"
              name="name"
              class="form-control"
@@ -32,7 +30,7 @@
       <div class="form-group" ng-class="{ 'has-success': form.address.$valid && submitted,
                                             'has-error': form.address.$invalid && submitted }">
 
-        <label>Address</label>
+        <label>Address *</label>
 
         <div id="address-search-new"></div>
 
@@ -48,7 +46,7 @@
 
     <div class="form-group" ng-class="{ 'has-success': form.category.$valid && submitted,
                                             'has-error': form.category.$invalid && submitted }">
-      <label>Category</label>
+      <label>Category *</label>
 
       <div class="btn-group">
         <label ng-repeat="c in categories"
@@ -64,20 +62,41 @@
         Category required
       </p>
     </div>
-
-    <div class="form-group" ng-class="{ 'has-success': form.duration.$valid && submitted,
+	  
+	  <div class="form-group" ng-class="{ 'has-success': form.dateTime.$valid && submitted,
+                                            'has-error': form.dateTime.$invalid && submitted }">
+	  
+	  <label>Date & Time *</label>
+	  <style>.input-group {margin-top:0px;}</style>
+	  <div class="form-group">
+                    <div class="input-group" datetimepicker
+                         ng-model="newLocation.details.dateTime" options="{format: 'DD/MM/YYYY HH:mm'}" datetime="dd/MM/yyyy HH:mm">
+                        <input type="text" class="form-control" required/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar" style="cursor:pointer;"></span>
+                        </span>
+                    </div>
+                </div>
+	  
+	  <p class="help-block" ng-show="form.dateTime.$error.required && submitted">
+        Date & Time required
+      </p>
+	  </div>
+	  
+	  <div class="form-group" ng-class="{ 'has-success': form.duration.$valid && submitted,
                                             'has-error': form.duration.$invalid && submitted }">
-      <label>Duration</label>
+											
+	  <label>Duration in hours *</label>
 
       <input type="number"
              name="duration"
-             min="0.5"
+             min="1"
              max="10"
-             step="0.5"
+             step="1"
              placeholder="Duration in Hours"
              class="form-control"
              ng-model="newLocation.details.duration"
-             required/>
+			 required/>
 
       <p class="help-block" ng-show="form.duration.$error.required && submitted">
         Duration required
@@ -103,17 +122,28 @@
      </p-->
 
     </div>
-
-    <div class="form-group">
-
-      <label>Import</label>
+	
+	<div class="form-group">
 
       <div ng-repeat="source in sources">
          <label>
-            <input type="checkbox" name="'{{source.name}}'" value="'{{source.name}}'" ng-model="source.enabled"> {{source.name}} <br/>
+            <input type="checkbox" name="'{{source.name}}'" value="'{{source.name}}'" ng-model="source.enabled"> {{source.name}} Description<br/>
          </label>
       </div>
 
+    </div>
+
+    <div class="form-group">
+      <label>
+      <input type="checkbox" name="publication" id="publication" onclick="switchPublicState()" ng-model="newLocation.details.publication" ng-init="newLocation.details.publication = false"/> Publish Location for all Friends
+	  </label>	  
+    </div>
+	
+	<div class="form-group private">
+      <label>Invite specific Friends</label>	 
+	  <ul>
+		<li ng-repeat="user in currentUser.friends | orderBy:'name'" style="list-style:none;display:inline;"><input type="checkbox" ng-click="invite(user)" name="ivitation" class="invitation"/><img src="http://localhost:9000/assets/images/users/{{user.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" style="width:50px; height:50px; margin: 5px;" popover-placement="bottom" popover="{{ user.name }}" popover-trigger="mouseover mouseleave"/></li>
+	  </ul>
     </div>
 
    </div>
@@ -142,33 +172,98 @@
     </div>
   </div>
 
-  <div class="row form-group uploadForm col-sm-12">
+  <style>	
+		.upload-zone {
+			height: 200px;
+			position: relative;
+			display: table;
+			width: 200px;
+		}
 
-      <label class="col-sm-12">Photos</label>
+		.upload-zone .alert-container {
+			position: absolute;
+			top: 0;
+			width: 100%;
+		}
 
-      <div class="col-sm-6">
-        <div ngf-no-file-drop>
-          <div class="button" ngf-select ng-model="files" ngf-multiple="false">Select File</div>
-        </div>
-        <div ngf-drop ngf-select ng-model="files" class="drop-box"
-             ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="false"
-             accept="image/*">
-          Drop images here or click to upload
-        </div>
+		.upload-zone .alert {
+			overflow: hidden;
+		}
 
-      </div>
+		.drop-zone, .upload-progress-zone {
+			height: 200px;
+			display: table-cell;
+			vertical-align: middle;
+			text-align: center;
+			padding: 10px;
+		}
 
-      <ul class="pictures col-sm-6" ng-show="files">
-        <li>
-          <img class="pic col-sm-3" ng-repeat="f in files" ngf-src="f" ngf-default-src="'assets/images/thumb.jpg'"
-               ngf-accept="'image/*'">
-        </li>
-      </ul>
+		.drop-zone {
+			border: 2px black dashed;
+		}
 
-    </div>
+		.drop-zone-over {
+			border-color: blue;
+		}
 
-  </div>
+		.drop-zone .drop-zone-message {
+			font-size: 2em;
+		}
 
+		.drop-zone input[type="file"]  {
+			display: none;
+		}
+		
+		input[type="radio"], input[type="checkbox"] {
+			margin: 0px 0 0;
+			margin-top: 1px \9;
+			line-height: normal;
+			width: 20px;
+			height: 20px;
+			vertical-align: middle;
+		}
+	</style>
+	
+	
+	<div class="col-sm-12">	 
+		<div ng-controller="LocationNewUploadCtrl" class="new-location-pictures">
+			<label>Photos</label>
+			<div style="display:table-cell;">
+				<div ng-repeat="pic in newLocation.details.pictures" class="images col-sm-6">
+				  <a ng-click="openImage($index)" class="loc-picture thumbnail">
+					<img src="{{pic}}" alt="">
+				  </a>
+				  <span class="glyphicon glyphicon-remove" ng-click="removePicture(pic)"></span>
+				</div>
+				<p ng-if="newLocation.details.pictures.length == 0">There is currently no picture uploaded!</p>
+			</div>
+			<div class="container upload">
+				<div class="row">
+					<div class="col-md-6" style="padding:0px;">
+						<div file-new-location-upload="fileUploadOptions" class="drop-container" style="width: 100%; padding-right: 15px;"></div>
+					</div>
+					<div class="col-md-6" style="padding:0px;">
+						<div>
+							<h3 class="upload-log-header" style="margin-top:0px;">Upload Log</h3>
+							<div>
+								<alert ng-repeat="alert in imageAlerts" type="{{alert.type}}" close="closeImageAlert($index)">
+									{{alert.msg}}
+								</alert>
+							</div>
+							<input id="picturesAmount" type="number" name="picturesAmount" value="{{alerts.length}}" style="display:none;"/>
+						</div>
+					</div>
+				</div>
+			</div>
+		  <p class="help-block"> {{  confirmMessage }} </p>
+		  <button class="btn btn-primary" onclick="angular.element(this).scope().changeLocationPictures($('#picturesAmount').val())">Confirm Picture</button>		  
+		</div>
+	</div>
+	<div class="col-sm-12" style="margin-top:20px;">	 
+		<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+	</div>
+</div>
+  
   <div class="row modal-footer">
     <button class="btn btn-primary btn-lg btn-submit" type="button" ng-click="addLocation(form)">
       Submit
@@ -179,3 +274,12 @@
   </div>
 
 </form>
+<script>
+	function switchPublicState() {
+		if(document.getElementById("publication").checked == false) {
+			$('.form-group.private').show();
+		} else {
+			$('.form-group.private').hide();
+		}
+	}
+</script>

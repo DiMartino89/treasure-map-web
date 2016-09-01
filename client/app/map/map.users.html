@@ -1,10 +1,16 @@
-<h3>Users</h3>
+<h3 style="color:#fff;">Users</h3>
+<style>
+	li.users:hover {background-color:#666;}
+	form {width:100%; display:block;}
+	.form-group.users {width:100%;}
+	.input-group.users {width:100%;margin:0px 0px 25px;}
+</style>
 
 <form>
-  <div class="form-group">
+  <div class="form-group users">
     <label class="sr-only" for="userFilter">Filter users</label>
 
-    <div class="input-group">
+    <div class="input-group users">
       <div class="input-group-addon"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></div>
       <input type="text" class="form-control" id="userFilter" placeholder="Filter users" ng-model="userFilter">
     </div>
@@ -20,9 +26,7 @@
 </form>
 
 <ul class="users">
-  <li ng-repeat="u in users | orderBy:'name' | filter:userFilter" ng-hide="!allUsers && !isFriend(u._id)"><a
-    ng-href="/users/{{u._id}}">{{u.name}}</a>
-    <span ng-show="u._id == currentUser._id">me</span>
-    <span ng-show="isFriend(u._id)">friend</span>
+  <li class="users" ng-repeat="u in users | orderBy:'name' | filter:userFilter" ng-hide="!allUsers && !isFriend(u._id)" ng-if="u.name != 'Admin'">
+	<a ng-href="/users/{{u._id}}"><img src="http://localhost:9000/assets/images/users/{{u.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" style="width:50px;height:50px;margin-right:5px;"/><span>{{u.name}}</span><span ng-if="isFriend(u._id)"> (Friend)</span></a>
   </li>
 </ul>

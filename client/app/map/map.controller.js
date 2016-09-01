@@ -1,11 +1,11 @@
 'use strict';
 
 angular.module('treasuremapApp')
-  	.controller('MapCtrl', function ($rootScope, $scope, $http, $state, Auth, $modal, search, $filter, User, Lightbox, $timeout, Locator) {
+  	.controller('MapCtrl', function ($rootScope, $scope, $http, $state, Auth, $modal, search, $filter, User, Lightbox, $timeout, Locator, $location, Location, $window) {
 
     $scope.isLoggedIn = Auth.isLoggedIn;
     $scope.currentUser = Auth.getCurrentUser();
-
+	$scope.isFriend = Auth.isFriend;
     $scope.search = search;
 
     $scope.openImage = function (index, images) {
@@ -255,27 +255,37 @@ angular.module('treasuremapApp')
       $scope.showSidebar = false;
       $state.go('^');
     };
+	
+	$timeout(function() {search.filterByFriends = true;}, 1000);
 
     $scope.$watch('search.filterByFriends', function(filterByFriends){
       if (filterByFriends) {
         $scope.filteredLocations = [];
+		$scope.friendsLocations = [];
 
         for(var i = 0; i < $scope.currentUser.friends.length; i++) {
           $scope.currentUser.friends[i].locations = User.locations({ id: $scope.currentUser.friends[i]._id }, function (locations) {
             _.each(locations, function(location){
               location.cluster = { styles: { url: 'assets/images/Cluster.png' } };
               location.icon = { url: location.details.category.imgUrl };
-
-              //location.click = selectLocation;
             });
+			$scope.friendsLocations = $scope.friendsLocations.concat(locations);
+			
+			for(var j = 0; j < $scope.friendsLocations.length; j++) {
+				if($scope.friendsLocations[j].details.publication == true || $scope.friendsLocations[j].details.members.indexOf($scope.currentUser._id) !== -1) {
+					//do nothing
+				} else {
+					$scope.friendsLocations.splice(j, 1);
+					j--;
+				}
+			}
 
-            $scope.filteredLocations = locations;
+            $scope.filteredLocations = $scope.friendsLocations;
           });
         }
-      } else {
-        $scope.filteredLocations = $scope.locations;
-      }
+      } 
     });
+	
     $scope.$watch('search.filterByMyLocations', function(filterByMyLocations){
       if (filterByMyLocations) {
         $scope.filteredLocations = [];
@@ -283,39 +293,39 @@ angular.module('treasuremapApp')
         $scope.currentUser.locations = User.locations({ id: $scope.currentUser._id }, function (locations) {
           _.each(locations, function(location){
             location.icon = { url: location.details.category.imgUrl };
-
-            //location.click = selectLocation;
           });
 
           $scope.filteredLocations = locations;
         });
-      } else {
-        $scope.filteredLocations = $scope.locations;
-      }
+      } 
     });
-
-    $scope.$watch('search.filterByCategory', function(filterByCategory){
-      $scope.filteredLocations = $scope.locations;
-      $scope.filteredLocations = $filter("filter")($scope.locations, filterByCategory);
+	
+	$scope.$watch('search.filterByAllRecommendedLocations', function(filterByAllRecommendedLocations){
+	  if (filterByAllRecommendedLocations) {
+        $scope.filteredLocations = [];
+		  $scope.filteredLocations = $scope.locations;
+		  for(var i = 0; i < $scope.filteredLocations.length; i++) {
+			if($scope.filteredLocations[i].owner.name != 'Admin') {
+				$scope.filteredLocations.splice(i, 1);
+			}
+		  }
+		  $scope.filteredLocations = $scope.filteredLocations;
+	  } 
     });
-
-    /*$scope.$watch('search.filterByCategory', function(filterByCategory){
-      console.log(filterByCategory);
-      if(filterByCategory.length > 0){
-         $scope.filteredLocations = $scope.locations;
-         var resultList = [];
-         _.each(filterByCategory, function(filterTherm){
-            console.log(filterTherm);
-            var filterList = $filter("filter")($scope.locations, filterTherm);
-            console.log(filterList);
-            resultList = resultList.concat(filterList);
-         });
-         console.log(resultList);
-         $scope.filteredLocations = resultList;
-      }else{
-         $scope.filteredLocations = $scope.locations;
-      }
-   });*/
+	
+	$scope.$watch('search.filterByCategory', function(filterByCategory){
+	  if (filterByCategory) {
+        $scope.filteredLocations = [];
+		  $scope.filteredLocations = $scope.locations;
+		  for(var i = 0; i < $scope.filteredLocations.length; i++) {
+			if($scope.filteredLocations[i].owner.name != 'Admin' && $scope.currentUser.friends.indexOf($scope.filteredLocations[i].owner._id) === -1) {
+				$scope.filteredLocations.splice(i, 1);
+			}
+		  }
+		  $scope.filteredLocations = $scope.filteredLocations;
+		  $scope.filteredLocations = $filter("filter")($scope.filteredLocations, filterByCategory);
+	  } 
+    });
 
     $rootScope.$on('$stateChangeSuccess',
       function (event, toState, toParams, fromState, fromParams) {
@@ -357,6 +367,16 @@ angular.module('treasuremapApp')
         }
       }
     };
+	
+	$scope.showLocationOnMap = function(latitude, longitude) {
+		$scope.search.map = {
+            center: {
+                latitude: latitude,
+                longitude: longitude
+            },
+            zoom: 14
+        };	
+	}
 
     $scope.getLocationBackground = function (location) {
       if (location.details !== undefined) {
@@ -367,10 +387,12 @@ angular.module('treasuremapApp')
           }
         } else {
           return {
-            'height': '75px',
+            /*'height': '75px',
             'margin': 0,
             'margin-left': '-15px',
-            'color': 'black'
+            'color': 'black'*/
+			'background-image': 'linear-gradient(transparent 25%, black), url("http://localhost:9000/assets/images/locations/default-location-images/default-' + location.details.category.name + '.png")',
+            'height': '200px'
           }
         }
       }

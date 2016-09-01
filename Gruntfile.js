@@ -96,7 +96,8 @@ module.exports = function (grunt) {
       },
       livereload: {
         files: [
-          '{.tmp,<%= yeoman.client %>}/{app,components,services}/**/*.css',
+          //'{.tmp,<%= yeoman.client %>}/{app,components,services}/**/*.css',
+		  '<%= yeoman.client %>}/{app,components,services}/**/*.css',
           '{.tmp,<%= yeoman.client %>}/{app,components,services}/**/*.html',
           '{.tmp,<%= yeoman.client %>}/{app,components,services}/**/*.js',
           '!{.tmp,<%= yeoman.client %>}{app,components,services}/**/*.spec.js',
@@ -377,7 +378,7 @@ module.exports = function (grunt) {
       styles: {
         expand: true,
         cwd: '<%= yeoman.client %>',
-        dest: '.tmp/',
+        dest: 'client/',
         src: ['{app,components,services}/**/*.css']
       }
     },
@@ -485,7 +486,7 @@ module.exports = function (grunt) {
           compass: false
         },
         files: {
-          '.tmp/app/app.css' : '<%= yeoman.client %>/app/app.scss'
+          '<%= yeoman.client %>app.css' : '<%= yeoman.client %>/app/app.scss'
         }
       }
     },
@@ -539,7 +540,7 @@ module.exports = function (grunt) {
         options: {
           transform: function(filePath) {
             filePath = filePath.replace('/client/', '');
-            filePath = filePath.replace('/.tmp/', '');
+            //filePath = filePath.replace('/.tmp/', '');
             return '<link rel="stylesheet" href="' + filePath + '">';
           },
           starttag: '<!-- injector:css -->',

@@ -1,10 +1,9 @@
-<div ng-include="'components/navbar/navbar.html'"></div>
-
 <div class="container signup-container">
   <div class="row">
     <div class="col-sm-12">
       <h1>Sign up</h1>
       <h3>Become a member of Treasure Map!</h3>
+	  <h3><a title="Click for Demo" ng-click="openModal('lg')" ng-show="!isLoggedIn()" style="cursor:pointer;"><span>How Treasure Map works!</span></a></h3>
     </div>
     <div class="col-sm-12">
       <form class="form sign" name="form" ng-submit="register(form)" novalidate>
@@ -60,6 +59,14 @@
             Sign up
           </button>
         </div>
+		<div class="signup">
+          <p>Already a member yet? Login <a href="/login" onclick="linkTo()">here</a>.</p>
+        </div>
+		<script>
+			function linkTo() {
+				window.location.href = window.location.origin + "/login";
+			}
+		</script>
         <div class="socialbar">
           <a class="btn-facebook" href="" ng-click="loginOauth('facebook')">
             <img src="/assets/images/social/facebook.png" alt="facebook_btn" width="40px" height="40px"/>

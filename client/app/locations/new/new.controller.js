@@ -1,8 +1,11 @@
 'use strict';
 
 angular.module('treasuremapApp')
-  .controller('NewCtrl', function($scope, $http, $timeout, $q, uiGmapGoogleMapApi, Auth, AppConfig) {
-    uiGmapGoogleMapApi.then(function(maps) {
+  .controller('NewCtrl', function($scope, $http, $timeout, $q, uiGmapGoogleMapApi, Auth, $stateParams, AppConfig, FileNewLocationUploadModal, FileUploader, picturesLength,newPicturesId) {
+    
+	$scope.currentUser = Auth.getCurrentUser();
+	
+	uiGmapGoogleMapApi.then(function(maps) {
       $timeout(function() {
         $scope.showMap = true;
       }, 100);
@@ -12,6 +15,7 @@ angular.module('treasuremapApp')
       details: {
         imports: '',
         pictures: [],
+		members: [],
         links: []
       }
     };
@@ -228,9 +232,28 @@ angular.module('treasuremapApp')
           });
       } else {
         form.$valid = false;
+		$scope.alerts.push({
+              type: 'danger',
+              msg: 'Couldn\'t add new location! Please check the fields again!'
+        });
       }
     }
+	
+	$scope.invite = function(user) {
+	  if($scope.newLocation.details.members.indexOf(user._id) === -1) {
+		$scope.newLocation.details.members.push(user._id);
+	  } else {
+		var index = $scope.newLocation.details.members.indexOf(user._id);
+        $scope.newLocation.details.members.splice(index, 1);
+	  }
+    };
+	
+	$scope.removePicture = function(pic) {
+      var index = $scope.newLocation.details.pictures.indexOf(pic);
+      $scope.newLocation.details.pictures.splice(index, 1);
+    };
 
+	/*
     var S3_BUCKET = AppConfig.s3_bucket;
     var creds = new AWS.CognitoIdentityCredentials({
       IdentityPoolId: AppConfig.aws_cognito,
@@ -242,7 +265,7 @@ angular.module('treasuremapApp')
     });
 
     var S3 = new AWS.S3({
-      region: s3_region
+      //region: s3_region
     });
 
     $scope.$watch('files', function() {
@@ -270,5 +293,73 @@ angular.module('treasuremapApp')
           });
         }
       }
+    };*/
+	
+	newPicturesId.setLength($scope.newLocation.details.pictures.length);
+	
+	$scope.changeLocationPictures = function (amount) {
+		var length = newPicturesId.getLength() + 1;
+		var randomId = newPicturesId.getId();
+		for(var i=0; i < amount; i++) {
+			$scope.newLocation.details.pictures.push('http://localhost:9000/assets/images/locations/' + $scope.currentUser._id + '-' + randomId + length + '.jpg');
+			length++;
+		}
+	};
+	
+	//UPLOAD-PICTURE-PART ==============================================
+	var fileName = '';
+	$scope.imageAlerts = [];
+	
+	$scope.fileUploadOptions = {
+      url: '/api/location/upload',
+      success: function (fileItem) {
+		fileName = fileItem.file.name;
+        $scope.imageAlerts.push({
+          type: 'success',
+          msg: '"' + fileItem.file.name + '" uploaded'
+        });
+      },
+      error: function (fileItem) {
+        $scope.imageAlerts.push({
+          type: 'danger',
+          msg: '"' + fileItem.file.name + '" failed'
+        });
+      }
     };
+	
+	/*$scope.showPath = function() {
+		alert($scope.currentUser.picture[0]);
+	};*/
+	
+    $scope.open = function () {
+      var modal = new FileNewLocationUploadModal($scope.fileUploadOptions);
+      modal.open();
+    };
+
+    $scope.closeImageAlert = function (index) {
+      $scope.imageAlerts.splice(index, 1);
+    };
+	
+  });
+  
+  angular.module('treasuremapApp')  
+  .service('newPicturesId', function() {
+		var id;
+		var length;
+
+        return {
+            getId: function () {
+                return id;
+            },
+			setId: function (value) {
+				id = value;
+			},
+			getLength: function () {
+                return length;
+            },
+			setLength: function (value) {
+				length = value;
+			}
+        };
+
   });

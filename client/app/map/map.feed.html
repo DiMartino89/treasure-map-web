@@ -1,6 +1,20 @@
-<h3>Friends Activity</h3>
+<h3 style="color:#fff;">Friends Activity</h3>
+<style>
+	li.feed {padding:5px;}
+	li.feed:hover {background-color:#666; cursor:pointer;}
+	p.feed {display:inline; vertical-align:middle;}
+</style>
 <ul>
-  <li ng-repeat="l in locations | orderBy:'createdAt'"><a ng-href="/users/{{l.owner._id}}">
-    {{l.createdAt | date : format : timezone}} - {{l.owner.name}}</a> created <a ng-href="/locations/{{l._id}}">{{l.details.name}}</a>
+  <li class="feed" style="color:#fff;" ng-repeat="l in locations | orderBy:'createdAt'" ng-click="showLocationOnMap(l.coordinates.latitude, l.coordinates.longitude)">
+	  <table><tr>
+		  <td>
+			  <img src="http://localhost:9000/assets/images/users/{{l.owner.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" style="width:50px;height:50px;margin-right:5px;"/>
+		  </td>
+		  <td>
+			  <p class="feed"><span>{{l.createdAt | date : format : timezone}} - </span><a ng-href="/users/{{l.owner._id}}">{{l.owner.name}}</a></p><br>
+			  <p class="feed"><span> created </span><a ng-href="/locations/{{l._id}}">{{l.details.name}}</a></p>
+		  </td>
+	  </tr></table>
   </li>
 </ul>
+

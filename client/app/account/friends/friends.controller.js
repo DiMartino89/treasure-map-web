@@ -2,6 +2,7 @@
 
 angular.module('treasuremapApp')
   .controller('FriendsCtrl', function ($scope, User, Auth) {
+	$scope.isFriend = Auth.isFriend;
     $scope.user = Auth.getCurrentUser();
     $scope.locations = [];
 

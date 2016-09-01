@@ -1,9 +1,16 @@
 'use strict';
 
 angular.module('treasuremapApp')
-  .controller('SignupCtrl', function ($scope, Auth, $location, $window) {
+  .controller('SignupCtrl', function ($scope, Auth, $location, $window, $modal) {
     $scope.user = {};
     $scope.errors = {};
+	
+	$scope.openModal = function(size) {
+      var modalInstance = $modal.open({
+        templateUrl: 'app/account/signup/introduction.html',
+        size: size
+      });
+    };
 
     $scope.register = function(form) {
       $scope.submitted = true;
