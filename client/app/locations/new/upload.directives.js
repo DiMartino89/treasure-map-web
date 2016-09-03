@@ -2,10 +2,9 @@
 
 
     // Angular File Upload module does not include this directive
-    // Only for example
-
-
-    /**
+	// Modified Directive from Source: https://github.com/nervgh/angular-file-upload (abgerufen am 21.07.2016), basically integrated as a Bower-Component and Node-Module
+    
+	/*
     * The ng-thumb directive
     * @author: nerv
     * @version: 0.1.2, 2014-01-09
