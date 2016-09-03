@@ -12,7 +12,7 @@
 				<li ng-repeat="l in locations | orderBy:'createdAt'" class="feed" ng-if="isFriend(l.owner._id) && l.details.publication == true || isFriend(l.owner._id) && l.details.members.indexOf(currentUser._id) !== -1">
 					<table><tr>
 					  <td class="feed-td one">
-						  <img src="http://localhost:9000/assets/images/users/{{l.owner.name}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" style="width:100px;height:100px;margin:5px;"/>
+						  <img src="http://treasuremap.f4.htw-berlin.de/assets/images/users/{{l.owner.name}}.jpg" onerror="this.src='http://treasuremap.f4.htw-berlin.de/assets/images/users/default-avatar.jpg'" style="width:100px;height:100px;margin:5px;"/>
 					  </td>
 					  <td class="feed-td two">
 						  <p><span>Created @:</span></p>

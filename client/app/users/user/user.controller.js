@@ -59,7 +59,7 @@ angular.module('treasuremapApp')
           }
         } else {
           return {
-            'background-image': 'linear-gradient(transparent 25%, black), url("http://localhost:9000/assets/images/locations/default-location-images/default-' + location.details.category.name + '.png")',
+            'background-image': 'linear-gradient(transparent 25%, black), url("http://treasuremap.f4.htw-berlin.de/assets/images/locations/default-location-images/default-' + location.details.category.name + '.png")',
             'height': 'auto'
           }
         }

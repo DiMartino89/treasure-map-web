@@ -301,7 +301,7 @@ angular.module('treasuremapApp')
 		var length = newPicturesId.getLength() + 1;
 		var randomId = newPicturesId.getId();
 		for(var i=0; i < amount; i++) {
-			$scope.newLocation.details.pictures.push('http://localhost:9000/assets/images/locations/' + $scope.currentUser._id + '-' + randomId + length + '.jpg');
+			$scope.newLocation.details.pictures.push('http://treasuremap.f4.htw-berlin.de/assets/images/locations/' + $scope.currentUser._id + '-' + randomId + length + '.jpg');
 			length++;
 		}
 	};

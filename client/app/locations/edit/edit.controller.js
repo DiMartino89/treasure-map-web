@@ -186,7 +186,7 @@ angular.module('treasuremapApp')
 	$scope.changeLocationPictures = function (amount) {
 		var length = picturesLength.getLength() + 1;		
 		for(var i=0; i < amount; i++) {
-			$scope.editLocation.details.pictures.push('http://localhost:9000/assets/images/locations/' + $stateParams.id + length + '.jpg');
+			$scope.editLocation.details.pictures.push('http://treasuremap.f4.htw-berlin.de/assets/images/locations/' + $stateParams.id + length + '.jpg');
 			length++;
 		}
 	};

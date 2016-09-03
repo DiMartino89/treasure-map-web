@@ -1,10 +1,74 @@
 <div class="row modal-header">
    <button type="button" class="close" data-dismiss="modal" aria-label="Close" ng-click="$dismiss()"><span aria-hidden="true">&times;</span></button>
-   <h1 class="modal-title" style="margin-top:0px;">Introduction Video</h1>
+   <h1 class="modal-title" style="margin-top:0px;">HOW IT WORKS?</h1>
 
    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
 </div>
 
+<style>
+	.tutorial tr td {
+		text-align: center;
+		vertical-align: top;
+		width: 25%;
+	}
+	
+	.tutorial .tutorial-head td {
+		font-size: 20px;
+		padding: 5px;
+	}
+	
+	.tutorial .tutorial-bottom td {
+		font-size: 16px;
+		padding: 5px;
+	}
+</style>
+
 <div class="row modal-body">
-	<video src="app/account/signup/video/SampleVideo.mp4" style="width:100%;height:auto;" poster="app/account/signup/video/SampleStandbild.jpg" autobuffer autoplay controls />
+	<!--<video src="app/account/signup/video/SampleVideo.mp4" style="width:100%;height:auto;" poster="app/account/signup/video/SampleStandbild.jpg" autobuffer autoplay controls />-->
+	<table class="tutorial">
+		<tbody>
+			<tr class="tutorial-head">
+				<td>
+					GET IN CONTACT WITH OTHERS
+				</td>
+				<td>
+					CHECKOUT THEIR LOCATIONS OR…
+				</td>
+				<td>
+					CREATE YOUR OWN LOCATIONS
+				</td>
+				<td>
+					MEET AND COME TOGETHER
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<img src="/assets/images/addFriends_logo.png" style="width:175px;height:175px;margin:5px;"/>
+				</td>
+				<td>
+					<img src="/assets/images/searchLocations_logo.png" style="width:175px;height:175px;margin:5px;"/>
+				</td>
+				<td>
+					<img src="/assets/images/addLocations_logo.png" style="width:175px;height:175px;margin:5px;"/>
+				</td>
+				<td>
+					<img src="/assets/images/meetEachOther_logo.png" style="width:175px;height:175px;margin:5px;"/>
+				</td>
+			</tr>
+			<tr class="tutorial-bottom">
+				<td>
+					Get in contact with your friends or get to know others and build up great friendships. 
+				</td>
+				<td>
+					Checkout the latest locations and events from your friends or look up some great recommended Places by the Treasure Map Team.
+				</td>
+				<td>
+					Create and manage your own events and meetings and invite your friends to your favourite locations.
+				</td>
+				<td>
+					Finally come together and enjoy a well-organized appointment with your friends.
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

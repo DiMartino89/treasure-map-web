@@ -75,7 +75,7 @@ angular.module('treasuremapApp')
 				title: $scope.locations[k].details.name,
 				start: new Date(year, month, day, hours, minutes),
 				end: new Date(year, month, day, hours, minutes),
-				url: 'http://localhost:9000/locations/' + $scope.locations[k]._id
+				url: 'http://treasuremap.f4.htw-berlin.de/locations/' + $scope.locations[k]._id
 			});
 		}	
 	}

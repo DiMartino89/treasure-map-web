@@ -6,7 +6,7 @@
 // You will need to set these on the server you deploy to.
 
 module.exports = {
-  DOMAIN:           'http://localhost:9000',
+  DOMAIN:           'http://treasuremap.f4.htw-berlin.de/',
   SESSION_SECRET:   'treasuremap-secret',
 
   FACEBOOK_ID:      'app-id',
