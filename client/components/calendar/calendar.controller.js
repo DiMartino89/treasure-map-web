@@ -19,11 +19,12 @@ angular.module('treasuremapApp')
     };
     /* event source that contains custom events on the scope */
 	
-	/* Part to include Friends locations*/
+	/* Part to include Friends locations */
 	$scope.locations = Location.query();
 	$scope.events = [];
 
 	// in controller
+	/* Function to include Locations as Events */
 	$timeout(function(){ $scope.getLocations(); }, 500);
 	
 	$scope.getLocations = function() {	
@@ -64,6 +65,7 @@ angular.module('treasuremapApp')
 			}
 		}
 
+		/* Calculating the correct Datetime */
 		for(var k = 0; k < $scope.locations.length; k++) {
 			var datetime = new Date($scope.locations[k].details.dateTime.toString());
 			var minutes = ("0" + datetime.getMinutes()).slice(-2);
@@ -152,7 +154,7 @@ angular.module('treasuremapApp')
         uiCalendarConfig.calendars[calendar].fullCalendar('render');
       }
     };
-     /* Render Tooltip */
+    /* Render Tooltip */
     $scope.eventRender = function( event, element, view ) { 
         element.attr({'tooltip': event.title,
                      'tooltip-append-to-body': true});

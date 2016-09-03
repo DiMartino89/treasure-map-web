@@ -46,6 +46,10 @@ app.use(busboy());
 app.use(express.static(path.join(__dirname, '../client/components')));
 app.use(express.static(path.join(__dirname, '.tmp')));
 
+/*
+*  Chat-Tutorial and © by Ashik Basheer, from 26th of March 2016, Source: http://www.jqueryajaxphp.com/private-messaging-with-socket-io-and-angularjs/ (abgerufen am 18.08.2016)
+*/
+
 // Chat 
 app.use(express.static(path.join(__dirname)));
 
@@ -85,6 +89,10 @@ io.on('connection', function(socket){
 	}
 });
 	
+/*
+*  Image Upload-Tutorial by Gautam Anand, Source: http://blog.gautamanand.in/uploading-files-with-nodejs-handling-using-fs/ (abgerufen am 19.07.2016)
+*/
+
 	
 // Image Upload
 	// Profile Pictures
