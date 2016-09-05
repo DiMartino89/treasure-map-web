@@ -9173,6 +9173,7 @@ a:hover {
 	
 	.profile-container .profile-status {
 		margin-top:0px;
+		margin-bottom: 10px;
 		padding: 3px 5px 3px 15px;
 		color: #fff;
 		font-size: 18px;
@@ -9182,7 +9183,7 @@ a:hover {
 	}
 	
 	.profile-container .profile-description {
-		margin-top: 10px;
+		margin-top: 0px;
 		padding: 3px 5px 3px 15px;
 		color: #fff;
 		font-size: 18px;

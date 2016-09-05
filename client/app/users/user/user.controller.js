@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('treasuremapApp')
-.controller('UserCtrl', function ($scope, $stateParams, Auth, User) {
+.controller('UserCtrl', function ($scope, $stateParams, Auth, User, $location) {
     $scope.currentUser = Auth.getCurrentUser();
     $scope.isFriend = Auth.isFriend;
 	$scope.isRequest = Auth.isRequest;
@@ -59,7 +59,7 @@ angular.module('treasuremapApp')
           }
         } else {
           return {
-            'background-image': 'linear-gradient(transparent 25%, black), url("http://treasuremap.f4.htw-berlin.de/assets/images/locations/default-location-images/default-' + location.details.category.name + '.png")',
+            'background-image': 'linear-gradient(transparent 25%, black), url("/assets/images/locations/default-location-images/default-' + location.details.category.name + '.png")',
             'height': 'auto'
           }
         }

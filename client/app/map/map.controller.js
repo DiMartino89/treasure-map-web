@@ -256,7 +256,7 @@ angular.module('treasuremapApp')
       $state.go('^');
     };
 	
-	$timeout(function() {search.filterByFriends = true;}, 1000);
+	$timeout(function() {search.filterByFriends = true;}, 2000);
 
     $scope.$watch('search.filterByFriends', function(filterByFriends){
       if (filterByFriends) {
@@ -391,7 +391,7 @@ angular.module('treasuremapApp')
             'margin': 0,
             'margin-left': '-15px',
             'color': 'black'*/
-			'background-image': 'linear-gradient(transparent 25%, black), url("http://treasuremap.f4.htw-berlin.de/assets/images/locations/default-location-images/default-' + location.details.category.name + '.png")',
+			'background-image': 'linear-gradient(transparent 25%, black), url("/assets/images/locations/default-location-images/default-' + location.details.category.name + '.png")',
             'height': '200px'
           }
         }

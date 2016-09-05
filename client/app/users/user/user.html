@@ -8,13 +8,13 @@
 		  <style>h2.normal {display:block;}</style>
 		  <h2 class="profile-name normal">{{user.name}} <small ng-if="user._id == currentUser._id">Me</small>
 					<div style="float:right;">
-						<button class="btn btn-primary" style="vertical-align:top;height:40px;"
+						<button class="btn btn-primary" style="vertical-align:top;height:33px;"
 								  ng-show="isFriend(user._id) && user._id != currentUser._id"
 								  ng-click="removeFriend(user); removeFriend2(user)">Remove Friend</button>
-						<button class="btn btn-primary" style="vertical-align:top;height:40px;"
+						<button class="btn btn-primary" style="vertical-align:top;height:33px;"
 								  ng-show="!isRequest(user) && !isFriend(user._id) && user._id != currentUser._id"
 								  ng-click="sendRequest(user)">Send Friendrequest</button>
-						<button class="btn btn-primary" style="vertical-align:top;height:40px;"
+						<button class="btn btn-primary" style="vertical-align:top;height:33px;"
 								  ng-show="isRequest(user) && !isFriend(user._id) && user._id != currentUser._id"
 								  ng-click="removeRequest(user)">Cancel Friendrequest</button>	
 					</div>						
@@ -36,11 +36,11 @@
 			<table class="user-table">
 				<tr>
 					<td>
-						<img class="profile-picture" src="http://treasuremap.f4.htw-berlin.de/assets/images/users/{{user.name}}.jpg" onerror="this.src='http://treasuremap.f4.htw-berlin.de/assets/images/users/default-avatar.jpg'" style="width:200px;height:200px;"/> 
+						<img class="profile-picture" src="/assets/images/users/{{user.name}}.jpg" onerror="this.src='/assets/images/users/default-avatar.jpg'" style="width:200px;height:200px;"/> 
 					</td>
 					<td style="width:100%;">
 						<span class="profile-status" style="display:block; float:right; vertical-align:top;" ng-if="currentUser._id == user._id || isFriend(user._id)"><span style="font-weight:bold;">Status:</span> {{user.status}}</span>
-						<span class="profile-description" style="display:block; float:right; vertical-align:top;" ng-if="currentUser._id == user._id || isFriend(user._id)">{{user.description}}</span>
+						<span class="profile-description" style="display:block; float:right; vertical-align:top;">{{user.description}}</span>
 					</td>
 				</tr>
 			</table>
@@ -54,7 +54,7 @@
 			<div>
 				<ul class="user-friends">
 					<li class="user-friend" ng-repeat="f in user.friends">
-					<table><tr><td style="width:20%;"><a ng-href="/users/{{f._id}}"><img style="width:115px; height:115px;" src="http://treasuremap.f4.htw-berlin.de/assets/images/users/{{f.name}}.jpg" onerror="this.src='http://treasuremap.f4.htw-berlin.de/assets/images/users/default-avatar.jpg'" popover-placement="bottom" popover="{{ f.name }}" popover-trigger="mouseover mouseleave"/></a></td></tr></table>
+					<table><tr><td style="width:20%;"><a ng-href="/users/{{f._id}}"><img style="width:115px; height:115px;" src="/assets/images/users/{{f.name}}.jpg" onerror="this.src='/assets/images/users/default-avatar.jpg'" popover-placement="bottom" popover="{{ f.name }}" popover-trigger="mouseover mouseleave"/></a></td></tr></table>
 					</li>
 				</ul>
 			</div>
@@ -70,7 +70,7 @@
 					<table>
 						<tr>
 							<td>
-								<a ng-href="/users/{{r._id}}"><img style="width:115px; height:115px; margin-right:10px;" src="http://treasuremap.f4.htw-berlin.de/assets/images/users/{{r.name}}.jpg" onerror="this.src='http://treasuremap.f4.htw-berlin.de/assets/images/users/default-avatar.jpg'"/></a>
+								<a ng-href="/users/{{r._id}}"><img style="width:115px; height:115px; margin-right:10px;" src="/assets/images/users/{{r.name}}.jpg" onerror="this.src='/assets/images/users/default-avatar.jpg'"/></a>
 							</td>
 							<td style="width:150px;">
 								<a ng-href="/users/{{r._id}}">{{r.name}}</a>

@@ -301,26 +301,26 @@ angular.module('treasuremapApp')
 		var length = newPicturesId.getLength() + 1;
 		var randomId = newPicturesId.getId();
 		for(var i=0; i < amount; i++) {
-			$scope.newLocation.details.pictures.push('http://treasuremap.f4.htw-berlin.de/assets/images/locations/' + $scope.currentUser._id + '-' + randomId + length + '.jpg');
+			$scope.newLocation.details.pictures.push('http://localhost:9000/assets/images/locations/' + $scope.currentUser._id + '-' + randomId + length + '.jpg');
 			length++;
 		}
 	};
 	
 	//UPLOAD-PICTURE-PART ==============================================
 	var fileName = '';
-	$scope.imageAlerts = [];
+	$scope.alerts = [];
 	
 	$scope.fileUploadOptions = {
       url: '/api/location/upload',
       success: function (fileItem) {
 		fileName = fileItem.file.name;
-        $scope.imageAlerts.push({
+        $scope.alerts.push({
           type: 'success',
           msg: '"' + fileItem.file.name + '" uploaded'
         });
       },
       error: function (fileItem) {
-        $scope.imageAlerts.push({
+        $scope.alerts.push({
           type: 'danger',
           msg: '"' + fileItem.file.name + '" failed'
         });
@@ -336,8 +336,8 @@ angular.module('treasuremapApp')
       modal.open();
     };
 
-    $scope.closeImageAlert = function (index) {
-      $scope.imageAlerts.splice(index, 1);
+    $scope.closeAlert = function (index) {
+      $scope.alerts.splice(index, 1);
     };
 	
   });

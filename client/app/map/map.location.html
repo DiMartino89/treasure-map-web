@@ -39,7 +39,7 @@
 	<p class="loc-members" style="color:#fff;font-weight:bold;"><strong>Members:</strong></p>
 		  <ul class="members-list">
 			<li class="member" ng-repeat="u in location.details.members" ng-model="member" ng-init="member = getUser(u);" style="list-style:none;display:inline;color:#000;border-bottom:none;">
-			<a ng-href="/users/{{u}}" ><img src="http://treasuremap.f4.htw-berlin.de/assets/images/users/{{member.name}}.jpg" style="width:50px;height:50px;margin:5px;" popover-placement="bottom" popover="{{ member.name }}" popover-trigger="mouseover mouseleave"/></a></li>
+			<a ng-href="/users/{{u}}" ><img src="/assets/images/users/{{member.name}}.jpg" onerror="this.src='/assets/images/users/default-avatar.jpg'" style="width:50px;height:50px;margin:5px;" popover-placement="bottom" popover="{{ member.name }}" popover-trigger="mouseover mouseleave"/></a></li>
 		  </ul>
 </div>
 

@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('treasuremapApp')
-  .factory('Auth', function Auth($location, $rootScope, $http, User, Location, $cookieStore, $q) {
+  .factory('Auth', function Auth($location, $rootScope, $http, User, Location, $cookieStore, $q, $stateParams) {
     var currentUser = {};
     if($cookieStore.get('token')) {
       currentUser = User.me();

@@ -1,6 +1,13 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 <div ng-include="'components/chat/chat.html'"></div>
 
+<style>
+	.modal-content {
+		width: 780px !important;
+		height: 600px !important;
+	}
+</style>
+
 <div class="container">
 	 <div class="row">
 		<div class="col-sm-6">
@@ -9,7 +16,7 @@
 			  <table class="category-table">
 				 <tr>
 					<td class="category-td one" style="width:50%; padding-bottom: 15px;">
-						<img ng-src="http://localhost:9000/assets/images/locations/default-location-images/default-{{category.name}}.png" style="width:300px;height:auto;margin-right:20px;" alt=""/>
+						<img src="/assets/images/locations/default-location-images/default-{{category.name}}.png" style="width:300px;height:auto;margin-right:20px;" alt=""/>
 					</td>
 					<td class="category-td two">
 						<img ng-src="{{category.imgUrl}}" alt=""/>

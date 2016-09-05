@@ -12,31 +12,40 @@ var Category = require('../api/category/category.model');
 
 var categories = [new Category({
   name: 'Geocaches',
-  imgUrl: 'assets/images/GeocachingPin00.png'
+  imgUrl: 'assets/images/GeocachingPin00.png',
+  pictures: ['http://localhost:9000/assets/images/categories/category-samples/Geocaches_01.png', 'http://localhost:9000/assets/images/categories/category-samples/Geocaches_02.png']
 }), new Category({
   name: 'Sights & Culture',
-  imgUrl: 'assets/images/SightsAndCulturePin00.png'
+  imgUrl: 'assets/images/SightsAndCulturePin00.png',
+  pictures: ['http://localhost:9000/assets/images/categories/category-samples/Sights&Culture_01.png', 'http://localhost:9000/assets/images/categories/category-samples/Sights&Culture_02.png']
 }), new Category({
   name: 'Food & Drink',
-  imgUrl: 'assets/images/FoodDrinkPin00.png'
+  imgUrl: 'assets/images/FoodDrinkPin00.png',
+  pictures: ['http://localhost:9000/assets/images/categories/category-samples/Food&Drink_01.png', 'http://localhost:9000/assets/images/categories/category-samples/Food&Drink_02.png']
 }), new Category({
   name: 'Leisure',
-  imgUrl: 'assets/images/LeisurePin00.png'
+  imgUrl: 'assets/images/LeisurePin02.png',
+  pictures: ['http://localhost:9000/assets/images/categories/category-samples/Leisure_01.png', 'http://localhost:9000/assets/images/categories/category-samples/Leisure_02.png']
 }), new Category({
   name: 'Shopping',
-  imgUrl: 'assets/images/ShoppingPin00.png'
+  imgUrl: 'assets/images/ShoppingPin00.png',
+  pictures: ['http://localhost:9000/assets/images/categories/category-samples/Shopping_01.png', 'http://localhost:9000/assets/images/categories/category-samples/Shopping_02.png']
 }), new Category({
   name: 'Accommodation',
-  imgUrl: 'assets/images/AccommodationPin00.png'
+  imgUrl: 'assets/images/AccommodationPin00.png',
+  pictures: ['http://localhost:9000/assets/images/categories/category-samples/Accommodation_01.png', 'http://localhost:9000/assets/images/categories/category-samples/Accommodation_02.png']
 }), new Category({
   name: 'Other',
-  imgUrl: 'assets/images/LeisurePin01.png'
+  imgUrl: 'assets/images/LeisurePin01.png',
+  pictures: ['http://localhost:9000/assets/images/categories/category-samples/Other_01.png', 'http://localhost:9000/assets/images/categories/category-samples/Other_02.png']
 }), new Category({
   name: 'Sports',
-  imgUrl: 'assets/images/SportsPin00.png'
+  imgUrl: 'assets/images/SportsPin00.png',
+  pictures: ['http://localhost:9000/assets/images/categories/category-samples/Sports_01.png', 'http://localhost:9000/assets/images/categories/category-samples/Sports_02.png']
 }), new Category({
   name: 'Events',
-  imgUrl: 'assets/images/EventPin02.png'
+  imgUrl: 'assets/images/EventPin02.png',
+  pictures: ['http://localhost:9000/assets/images/categories/category-samples/Events_01.png', 'http://localhost:9000/assets/images/categories/category-samples/Events_02.png']
 })];
 
 Category.find({}).remove(function () {

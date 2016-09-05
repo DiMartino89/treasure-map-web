@@ -17,6 +17,49 @@ angular.module('treasuremapApp')
 		return User.get({ id: userId });
 	}
 	$scope.member = $scope.getUser();
+	
+	$scope.cancelEvent = function() {
+		$scope.location.details.members.splice($scope.currentUser._id);
+		$scope.updateLocation();
+	}
+	
+	//____________________________________________________________
+	$scope.updateLocation = function () {
+      if ($scope.location === {}) {
+        return;
+      }
+
+      if ($scope.location.coordinates) {
+        $scope.location.details.category = $scope.location.details.category._id;
+        $scope.location.owner = $scope.location.owner._id;
+        console.log($scope.location);
+        $http.put('/api/locations/' + $scope.location._id, $scope.location, { headers: { 'Content-Type': 'application/json'}})
+          .success(function (data, status) {
+            console.log('Success! ' + status);
+            console.log(data);
+            $scope.alerts.push({type: 'success', msg: 'New Location successfully added!'});
+
+            $scope.location = {};
+
+            console.log()
+            $http.get('/api/categories/'+ data.details.category)
+              .success(function (category) {
+                data.details.category = category;
+                $scope.$close(data);
+              });
+          })
+          .error(function (data, status) {
+            console.log('Error!' + status);
+            $scope.alerts.push({type: 'danger', msg: 'Couldn\'t edit location!'});
+          });
+      } else {
+		$scope.alerts.push({
+              type: 'danger',
+              msg: 'Couldn\'t add new location! Please check the fields again!'
+        });
+      }
+    };
+	//____________________________________________________________
 
     $scope.socials = [{
       'name': 'Facebook',

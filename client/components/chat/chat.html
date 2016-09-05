@@ -9,7 +9,7 @@
       </div>
       <ul class="list">
         <li class="chat-user" ng-class="{selected : selectedUser === user.nickname}" ng-click="loadChat($event)" nickname="{{user.nickname}}" socketid="{{user.socketid}}" ng-repeat="user in users | filter: searchUsers" ng-if="user.socketid != mysocketid && isFriend(user.id)">
-          <img class="profilepicture" src="http://localhost:9000/assets/images/users/{{user.nickname}}.jpg" onerror="this.src='http://localhost:9000/assets/images/users/default-avatar.jpg'" alt="{{user.nickname}}" />
+          <img class="profilepicture" src="/assets/images/users/{{user.nickname}}.jpg" onerror="this.src='/assets/images/users/default-avatar.jpg'" alt="{{user.nickname}}" />
           <div class="about">
             <div class="name" style="color:#fff;">{{user.nickname}} </div>
             <div class="status">
@@ -24,7 +24,7 @@
     <div class="chat">
       <div id="chat-holder" ng-show="activeChat">
         <div class="chat-header clearfix">
-          <img class="chosenuseravatar" src="http://localhost:9000/assets/images/users/{{selectedUser}}.jpg" alt="avatar" />
+          <img class="chosenuseravatar" src="/assets/images/users/{{selectedUser}}.jpg" onerror="this.src='/assets/images/users/default-avatar.jpg'" alt="avatar" />
           
           <div class="chat-about">
             <div class="chat-with">Chat with {{selectedUser}}</div>

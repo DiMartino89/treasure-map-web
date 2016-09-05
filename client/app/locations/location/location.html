@@ -25,7 +25,7 @@
 				<tr>
 					<td class="location-td one" style="padding-right:15px; width:280px;">		
 					  <img src="{{location.details.pictures[0]}}" ng-if="location.details.pictures.length > 0" style="width:250px;heigth:auto;" />
-					  <img src="http://treasuremap.f4.htw-berlin.de/assets/images/locations/default-location-images/default-{{location.details.category.name}}.png" ng-if="location.details.pictures.length == 0" style="width:250px;heigth:auto;"/>
+					  <img src="/assets/images/locations/default-location-images/default-{{location.details.category.name}}.png" ng-if="location.details.pictures.length == 0" style="width:250px;heigth:auto;"/>
 					</td>
 					<!--<style>.location-td.two, .location-td.three {display:block;}</style>-->
 					<td class="location-td two" style="font-size:18px;vertical-align:top;width:125px;">
@@ -92,13 +92,18 @@
 			 </div>
 		  </div>
 		  
-		  <p class="loc-publication" ng-if="location.details.members.length == 0"><strong>Published for all Friends<strong></p>
+		  <p class="loc-publication" ng-if="location.details.members.length == 0" style="margin-top:10px;"><strong>Publication: </strong>
+			<span class="loc-publication" ng-if="location.details.members.length == 0 && location.details.publication == true">For All Friends</span>
+			<span class="loc-publication" ng-if="location.details.members.length == 0 && location.details.publication == false">Private Event</span>	  
+		  </p>
 		  <div ng-if="location.details.members.length > 0">
 			  <p class="loc-members"><strong>Members:</strong></p>
 			  <ul class="members-list">
 				<li ng-repeat="u in location.details.members" ng-model="member" ng-init="member = getUser(u);" style="list-style:none;display:inline;color:#000;">
-				<a ng-href="/users/{{u}}" ><img src="http://treasuremap.f4.htw-berlin.de/assets/images/users/{{member.name}}.jpg" onerror="this.src='http://treasuremap.f4.htw-berlin.de/assets/images/users/default-avatar.jpg'" style="width:50px;height:50px;margin:5px;" popover-placement="bottom" popover="{{ member.name }}" popover-trigger="mouseover mouseleave"/></a></li>
+				<a ng-href="/users/{{u}}" ><img src="/assets/images/users/{{member.name}}.jpg" onerror="this.src='/assets/images/users/default-avatar.jpg'" style="width:50px;height:50px;margin:5px;" popover-placement="bottom" popover="{{ member.name }}" popover-trigger="mouseover mouseleave"/></a></li>
 			  </ul>
+			  <span>No time to take part in? Then...</span>
+			  <button class="btn btn-primary" ng-click="cancelEvent()">Cancel</button>
 		  </div>
 
 		  <div class="social">

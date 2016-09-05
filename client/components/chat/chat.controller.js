@@ -13,7 +13,9 @@ app.controller('ChatCtrl', function ($scope, $location, $modal, Auth, search, Lo
    $scope.isFriend = Auth.isFriend;
    $scope.isLoggedIn = Auth.isLoggedIn;
    
-   socket = io.connect('http://treasuremap.f4.htw-berlin.de/');
+   var domain = 'http://' + $location.host() + $location.port();
+   
+   socket = io.connect('http://localhost:9000');
    var hash = CryptoJS.MD5($scope.getCurrentUser.email);
    socket.emit('newuser',{nickname: $scope.getCurrentUser.name, id: $scope.getCurrentUser._id, emailhash: String(hash)},function(data){
 		if(data.status == true){

@@ -24,7 +24,7 @@
 						<tr>
 							<td class="location-td one">
 								<a ng-href="/locations/{{l._id}}" ng-if="l.details.pictures.length > 0"><img src="{{l.details.pictures[0]}}" style="width:200px;height:auto;margin:5px 15px 5px 5px;"/></a>
-								<a ng-href="/locations/{{l._id}}" ng-if="l.details.pictures.length == 0"><img src="http://treasuremap.f4.htw-berlin.de/assets/images/locations/default-location-images/default-{{l.details.category.name}}.png" ng-if="l.details.pictures.length == 0" style="width:200px;heigth:auto;margin:5px 15px 5px 5px;" /></a>
+								<a ng-href="/locations/{{l._id}}" ng-if="l.details.pictures.length == 0"><img src="/assets/images/locations/default-location-images/default-{{l.details.category.name}}.png" ng-if="l.details.pictures.length == 0" style="width:200px;heigth:auto;margin:5px 15px 5px 5px;" /></a>
 							</td>
 							<style>.location-td two, .location-td three {display:block;}</style>
 							<td class="location-td two" style="width:100px;">

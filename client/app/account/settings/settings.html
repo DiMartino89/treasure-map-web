@@ -65,6 +65,7 @@
 	<div class="col-sm-12">
 		<div class="description-form">
 			<div class="update-container">
+				<p style="color:#fff;">Please note that your description can be seen by everyone!</p>
 				<div class="form-group">
 					<label style="display:inline-block;text-align:left;">Current Description: <span style="font-weight:normal;">{{currentUser.description}}</span></label>
 					<textarea class="form-control description" type="text" placeholder="Something about you" name="newDescription" ng-model="user.newDescription" max-length="500" rows="7"/>
@@ -86,6 +87,7 @@
 				<div class="update-container">
 					<div class="container">
 						<div class="row">
+							<p style="color:#fff;">Please choose a JPEG-File!</p>
 							<div class="picture-form">
 								<div class="col-md-6" style="padding-left:0px;">
 									<div file-upload="fileUploadOptions" class="drop-container"></div>
@@ -100,7 +102,7 @@
 										</div>
 										<div>
 											<label>Current Profile Picture:</label>
-											<img src="http://treasuremap.f4.htw-berlin.de/assets/images/users/{{currentUser.name}}.jpg" onerror="this.src='http://treasuremap.f4.htw-berlin.de/assets/images/users/default-avatar.jpg'" style="width:100px;height:100px;"/>
+											<img src="/assets/images/users/{{currentUser.name}}.jpg" onerror="this.src='/assets/images/users/default-avatar.jpg'" style="width:100px;height:100px;"/>
 										</div>
 									</div>
 								</div>
