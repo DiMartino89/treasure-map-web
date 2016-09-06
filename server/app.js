@@ -34,7 +34,7 @@ server.listen(config.port || 9000, config.ip, function () {
 exports = module.exports = app;
 
 // Include components to chat
-var socket = require('./node_modules/socket.io');
+var socket = require('socket.io');
 var io = require('socket.io')(server);
 
 // Include components for image uploads
