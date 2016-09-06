@@ -30,6 +30,9 @@
     "angular-eonasdan-datetimepicker": "^0.3.5",
 	"moment-timezone": "~0.5.5"
   },
+  "scripts": {
+    "postinstall": "./node_modules/bower/bin/bower install"
+  },
   "devDependencies": {
     "angular-mocks": ">=1.4.3",
     "angular-scenario": ">=1.4.3"
