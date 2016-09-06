@@ -49,7 +49,6 @@ module.exports = function(app) {
   }
   */
    if ('production' === env) {
-	//app.use(favicon(path.join(config.root, 'favicon.ico')));
 	app.use(express.static(path.join(config.root, '.tmp')));
     app.use(express.static(path.join(config.root, 'client')));
     app.set('appPath', 'client');
