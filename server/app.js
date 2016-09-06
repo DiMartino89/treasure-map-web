@@ -44,7 +44,9 @@ var fs = require('fs-extra');
 
 app.use(busboy());
 app.use(express.static(path.join(__dirname, '../client/components')));
+app.use(express.static(path.join(__dirname, '../client/')));
 app.use(express.static(path.join(__dirname, '.tmp')));
+//app.use(favicon(__dirname + '/public/favicon.ico'));
 
 /*
 *  Chat-Tutorial and © by Ashik Basheer, from 26th of March 2016, Source: http://www.jqueryajaxphp.com/private-messaging-with-socket-io-and-angularjs/ (abgerufen am 18.08.2016)
