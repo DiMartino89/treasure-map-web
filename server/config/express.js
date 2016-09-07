@@ -45,7 +45,6 @@ module.exports = function(app) {
     app.use(favicon(path.join(config.root, 'client/', 'favicon.ico')));
 	app.use(express.static(path.join(config.root, '.tmp')));
     app.use(express.static(path.join(config.root, 'client')));
-	app.use(express.static(path.join(config.root, 'client/bower_components')));
 	//app.use(express.static(path.join(config.root)));
 	app.set('appPath', 'client');
     //app.set('appPath', config.root);
