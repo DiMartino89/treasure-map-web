@@ -43,9 +43,9 @@ var path = require('path');
 var fs = require('fs-extra');
 
 app.use(busboy());
-app.use(express.static(path.join(__dirname, '../client/app')));
-app.use(express.static(path.join(__dirname, '../client/bower_components')));
-app.use(express.static(path.join(__dirname, '../client/components')));
+app.use(express.static(path.join(__dirname, 'client/app')));
+app.use(express.static(path.join(__dirname, 'client/bower_components')));
+app.use(express.static(path.join(__dirname, 'client/components')));
 app.use(express.static(path.join(__dirname, '.tmp')));
 
 /*
