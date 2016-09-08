@@ -1,9 +1,7 @@
 node_modules
-.tmp
+public
 .sass-cache
 .idea
 *.iml
-client/bower_components
-/server/config/local.env.js
+dist
 .DS_Store
-/client/app/config.js
