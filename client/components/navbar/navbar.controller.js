@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('treasuremapApp')
-  .controller('NavbarCtrl', function ($scope, $location, $modal, Auth, search, Locator, $timeout, $state, $http) {
+  .controller('NavbarCtrl', function ($scope, $location, $modal, Auth, search, Locator, $timeout, $state, $http, $filter) {
     $scope.menu = [{
       'title': 'Map',
       'link': 'map',
@@ -74,6 +74,14 @@ angular.module('treasuremapApp')
          });
       });
    };
+   
+   $scope.currNewFriendsLocations = [];
+
+    for(var i = 0; i < $scope.user.friends.length; i++) {
+      $scope.user.friends[i].locations = User.locations({ id: $scope.user.friends[i]._id }, function (locations) {
+        $scope.currNewFriendsLocations = $scope.locations.concat(locations);
+      });
+    }
 
    $scope.clearSearch = function () {
       $scope.search.searchTerm = '';
